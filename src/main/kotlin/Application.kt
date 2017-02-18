@@ -12,16 +12,13 @@ object Application {
     fun main(args: Array<String>) {
         System.setProperty("webdriver.chrome.driver", "chromedriver.exe")
 
-
         val news = MainPage().get()
-        news.forEach {
-            println("Title: ${it.first} - Url ${it.second}")
-        }
 
         val articles = ArticlePage.getArticles(news.toMap().values)
 
         articles.forEach {
             println("${it.id} - ${it.title}")
+
             val imageFile = File(it.folder.absolutePath + "/image.jpg")
             imageFile.writeBytes(it.image)
 
@@ -36,8 +33,6 @@ object Application {
             contentFile.writeText(finalContent)
         }
 
-
     }
-
 
 }
