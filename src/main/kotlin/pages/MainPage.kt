@@ -12,7 +12,7 @@ class MainPage : Page<List<Pair<String, String>>> {
 
     //val logger = LogManager.getLogManager().getLogger(Main::class.java.simpleName)
 
-    override val name = "Main_$currentDate"
+    override val name = "Main_$currentDate.html"
     override val url = Application.mainUrl
 
     override fun get(): List<Pair<String, String>> {
