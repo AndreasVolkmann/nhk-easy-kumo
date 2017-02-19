@@ -5,6 +5,7 @@ gen
 
 files
 build
+/chromedriver.exe
 
 
 .gradle
