@@ -1,6 +1,6 @@
 package pages
 
-import currentDate
+import Application
 import org.openqa.selenium.chrome.ChromeDriver
 import java.io.File
 
@@ -11,16 +11,17 @@ interface Page<out T> {
 
     val url: String
 
-    val path get() = "${Application.fileDir}/$currentDate/"
+    val path get() = "${Application.fileDir}/articles/"
 
+    val dir get() = File(path)
     val file get() = File("$path/$name")
 
-    fun writeFile(name: String, text: String) = File("$path/$name").writeText(text)
+    fun writeFile(name: String, text: String) = file.writeText(text)
 
     fun get(): T
 
     fun load(): String {
-        if (File(path).exists().not()) File(path).mkdirs()
+        if (dir.exists().not()) dir.mkdirs()
         if (file.exists().not()) {
             println("Today's file $name has not been archived yet, fetching from web ...")
             val driver = ChromeDriver()

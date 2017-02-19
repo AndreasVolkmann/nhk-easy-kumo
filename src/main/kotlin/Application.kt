@@ -1,6 +1,5 @@
 import pages.ArticlePage
 import pages.MainPage
-import java.io.File
 
 
 object Application {
@@ -12,27 +11,19 @@ object Application {
     fun main(args: Array<String>) {
         System.setProperty("webdriver.chrome.driver", "chromedriver.exe")
 
-        val news = MainPage().get()
-
-        val articles = ArticlePage.getArticles(news.toMap().values)
+        val headlines = MainPage().get()
+        val articles = ArticlePage.getArticles(headlines)
 
         articles.forEach {
-            println("${it.id} - ${it.title}")
-
-            val imageFile = File(it.folder.absolutePath + "/image.jpg")
-            imageFile.writeBytes(it.image)
-
-            val audioFile = File(it.folder.absolutePath + "/audio.mp3")
-            audioFile.writeBytes(it.audio)
-
-            val contentFile = File(it.folder.absolutePath + "/content.txt")
-            val finalContent = it.title + "\n" +
-                    it.url + "\n" +
-                    it.audioUrl + "\n" +
-                    it.content
-            contentFile.writeText(finalContent)
+            with(it) {
+                println("$date - $id - $title")
+                imageFile.writeIfNotExists(image)
+                audioFile.writeIfNotExists(audio)
+                contentFile.writeIfNotExists(finalContent)
+            }
         }
 
     }
+
 
 }
