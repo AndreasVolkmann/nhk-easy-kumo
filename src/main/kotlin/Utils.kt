@@ -1,5 +1,7 @@
 import org.jsoup.nodes.Element
+import java.io.BufferedInputStream
 import java.io.File
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,4 +55,12 @@ fun File.writeIfNotExists(bytes: ByteArray) {
 
 fun File.writeIfNotExists(text: String) {
     if (this.notExists()) this.writeBytes(text.toByteArray())
+}
+
+fun URL.read() = try {
+    BufferedInputStream(this.openStream()).use {
+        it.readBytes()
+    }
+} catch (ex: Exception) {
+    ByteArray(0)
 }

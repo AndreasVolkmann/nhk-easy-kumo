@@ -5,7 +5,7 @@ import data.Headline
 import getText
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import java.io.BufferedInputStream
+import read
 import java.net.URL
 import java.util.stream.Stream
 
@@ -39,22 +39,14 @@ class ArticlePage(val headline: Headline) : Page<Article> {
                 .attr("src")
 
         val finalImageUrl = if (imgUrl.startsWith("http")) imgUrl else url.removeSuffix("html") + "jpg"
-
-        BufferedInputStream(URL(finalImageUrl).openStream()).use {
-            it.readBytes(44)
-        }
+        URL(finalImageUrl).read()
     }
 
 
     fun getAudio(): Pair<String, ByteArray> {
         val audioUrl = url.removeSuffix("html") + "mp3"
         return if (Article.getAudioFile(dir).exists()) audioUrl to ByteArray(0)
-        else {
-            val audio = BufferedInputStream(URL(audioUrl).openStream()).use {
-                it.readBytes()
-            }
-            audioUrl to audio
-        }
+        else audioUrl to URL(audioUrl).read()
     }
 
     fun getContent(body: Element) = body.getElementById("newsarticle").getText()
