@@ -27,7 +27,7 @@ interface Page<out T> {
             val driver = ChromeDriver()
             try {
                 driver.get(url)
-                Thread.sleep(5000)
+                Thread.sleep(3000)
                 val doc = driver.pageSource
                 writeFile(name, doc)
             } finally {

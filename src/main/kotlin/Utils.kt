@@ -1,3 +1,4 @@
+import javazoom.jl.decoder.Bitstream
 import org.jsoup.nodes.Element
 import java.io.BufferedInputStream
 import java.io.File
@@ -63,4 +64,15 @@ fun URL.read() = try {
     }
 } catch (ex: Exception) {
     ByteArray(0)
+}
+
+fun File.getDuration(): Long = this.inputStream().use {
+    val stream = Bitstream(it)
+    val h = stream.readFrame()
+    val tn = it.channel.size()
+    val ms = h.ms_per_frame()
+    val bitrate = h.bitrate()
+    val frame = h.calculate_framesize()
+    println("Frame: $frame, ms: $ms, bitrate: $bitrate, channel: $tn, ${tn / 10000}" )
+    tn / 10000
 }
