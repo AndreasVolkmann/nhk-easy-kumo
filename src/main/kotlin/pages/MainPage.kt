@@ -1,6 +1,6 @@
 package pages
 
-import Application
+import Crawler
 import currentDate
 import data.Headline
 import getDate
@@ -14,7 +14,7 @@ import org.jsoup.nodes.Element
 class MainPage : Page<List<Headline>> {
 
     override val name = "Main_$currentDate.html"
-    override val url = Application.mainUrl
+    override val url = Crawler.mainUrl
 
     override fun get(): List<Headline> {
         val text = load()

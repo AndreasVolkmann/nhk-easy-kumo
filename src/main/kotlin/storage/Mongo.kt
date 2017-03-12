@@ -4,6 +4,7 @@ import com.mongodb.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.InsertOneOptions
 import data.Article
 import org.bson.Document
 
@@ -15,7 +16,7 @@ object Mongo {
     const val host = "localhost"
     const val port = 27017
     const val database = "nhk"
-    const val collection = "articles"
+    val collection = if (System.getProperty("ENV") == "TEST") "test" else "articles"
 
     fun connect() = MongoClient(host, port)
 
@@ -32,8 +33,8 @@ object Mongo {
         insertMany(docs)
     }
 
-    fun updateArticle(id: String): Document? = Mongo {
-        findOneAndUpdate(eq("id", id), Document("\$set", Document("imported", true)), FindOneAndUpdateOptions().upsert(true))
+    fun updateArticle(article: Article): Document? = Mongo {
+        findOneAndUpdate(eq("id", article.id), Document("\$set", Document("imported", true)), FindOneAndUpdateOptions().upsert(true))
     }
 
     fun loadArticles(): List<Article> = Mongo {
@@ -42,8 +43,8 @@ object Mongo {
 
     fun filterImported(articles: List<Article>) = Mongo {
         articles.filter {
-            //find(eq("id", it.id))
-            false
+            val match = find(eq("id", it.id)).map { it["id"] }
+            match.count() == 0 // no articles with this id found
         }
     }
 

@@ -41,8 +41,9 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
     compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
     compile 'org.mongodb:mongodb-driver:3.4.2'
+    compile 'com.beust:jcommander:1.64'
 
     testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M3"
-    testCompile "org.amshove.kluent:kluent:1.15"
+    testCompile "org.amshove.kluent:kluent:1.16"
 
 }

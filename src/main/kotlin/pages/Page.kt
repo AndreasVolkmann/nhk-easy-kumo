@@ -1,6 +1,5 @@
 package pages
 
-import Application
 import org.openqa.selenium.chrome.ChromeDriver
 import java.io.File
 
@@ -11,7 +10,7 @@ interface Page<out T> {
 
     val url: String
 
-    val path get() = "${Application.fileDir}/articles/"
+    val path get() = "${FileArchive.fileDir}/articles/"
 
     val dir get() = File(path)
     val file get() = File("$path/$name")

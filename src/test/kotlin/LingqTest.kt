@@ -13,11 +13,7 @@ class LingqTest {
 
     @Test
     fun connect() {
-        val lingq = Lingq(article)
-
-        lingq.import()
-
-
+        Lingq.import(listOf(article))
     }
 
 }

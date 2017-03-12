@@ -11,7 +11,8 @@ data class Article(
         val image: ByteArray,
         val audio: ByteArray,
         val audioUrl: String,
-        val dir: File
+        val dir: File,
+        val imported: Boolean = false
 ) {
 
     val imageFile = getImageFile(dir)

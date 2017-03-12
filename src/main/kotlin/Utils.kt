@@ -24,7 +24,7 @@ fun Element.getText() = this.html()
 
 fun Element.getUrl() = makeUrl(this.attr("href"))
 
-fun makeUrl(part: String) = Application.mainUrl.removeSuffix("/") + part.removePrefix(".")
+fun makeUrl(part: String) = Crawler.mainUrl.removeSuffix("/") + part.removePrefix(".")
 
 
 const val gatsu = "月"
