@@ -7,7 +7,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import read
 import java.net.URL
-import java.util.stream.Stream
+import kotlin.streams.toList
 
 
 class ArticlePage(val headline: Headline) : Page<Article> {
@@ -52,9 +52,9 @@ class ArticlePage(val headline: Headline) : Page<Article> {
     fun getContent(body: Element) = body.getElementById("newsarticle").getText()
 
     companion object {
-        fun getArticles(links: Collection<Headline>): Stream<Article> = links.parallelStream().map {
+        fun getArticles(links: Collection<Headline>) = links.parallelStream().map {
             ArticlePage(it).get()
-        }
+        }.toList()
     }
 
 

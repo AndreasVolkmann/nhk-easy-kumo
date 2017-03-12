@@ -11,30 +11,20 @@ data class Article(
         val image: ByteArray,
         val audio: ByteArray,
         val audioUrl: String,
-        val dir: File,
-        val imported: Boolean = false
+        val dir: File
 ) {
 
     val imageFile = getImageFile(dir)
 
     val audioFile = getAudioFile(dir)
 
-    val contentFile = getContentFile(dir)
-
     val htmlFile = getHtmlFile(dir)
-
-    val finalContent = title + "\n" +
-            url + "\n" +
-            audioUrl + "\n" +
-            content
-
 
 
     companion object {
 
         fun getImageFile(dir: File) = File(dir.absolutePath + "/image.jpg")
         fun getAudioFile(dir: File) = File(dir.absolutePath + "/audio.mp3")
-        fun getContentFile(dir: File) = File(dir.absolutePath + "/content.txt")
         fun getHtmlFile(dir: File) = File(dir.absolutePath + "/package.html")
     }
 

@@ -1,5 +1,6 @@
 package lingq
 
+import PropertyReader
 import data.Article
 import getDuration
 import org.openqa.selenium.chrome.ChromeDriver
@@ -11,7 +12,12 @@ import java.lang.Thread.sleep
  */
 class Lingq(val article: Article) {
 
-    val url = "https://www.lingq.com/learn/ja/import/contents/?add"
+    companion object {
+        const val url = "https://www.lingq.com/learn/ja/import/contents/?add"
+        val user = PropertyReader.getProperty("lingq.user")
+        val pass = PropertyReader.getProperty("lingq.pass")
+    }
+
 
     fun import() {
         val options = ChromeOptions()
@@ -21,8 +27,8 @@ class Lingq(val article: Article) {
                 // Login Page
                 get(url)
                 val userNameInput = findElementById("id_username")
-                userNameInput.sendKeys("avolkmann")
-                findElementById("id_password").sendKeys("claner")
+                userNameInput.sendKeys(user)
+                findElementById("id_password").sendKeys(pass)
                 userNameInput.submit()
 
                 // Import Page

@@ -37,9 +37,10 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
     compile "org.seleniumhq.selenium:selenium-chrome-driver:3.3.0"
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
     compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
+    compile 'org.mongodb:mongodb-driver:3.4.2'
 
     testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M3"
     testCompile "org.amshove.kluent:kluent:1.15"
