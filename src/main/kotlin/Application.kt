@@ -15,8 +15,10 @@ object Application {
         System.setProperty("webdriver.chrome.driver", "chromedriver.exe")
 
         val articles = Crawler.fetchArticles() // crawl nhk for articles
-        FileArchive.archive(articles) // save files
         val filtered = Mongo.filterImported(articles) // filter for already imported
+        println("Found ${filtered.size} articles that have not been imported yet")
+
+        FileArchive.archive(filtered) // save files
         Lingq.import(filtered) // import to LingQ
     }
 

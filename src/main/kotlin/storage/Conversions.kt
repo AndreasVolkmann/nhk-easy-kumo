@@ -15,7 +15,7 @@ fun Article.toDocument(): Document = Document()
         .append("date", date)
         .append("content", content)
         .append("audioUrl", audioUrl)
-        .append("imported", false)
+        .append("imported", imported)
 
 
 fun Document.toArticle(): Article = Article(

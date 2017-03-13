@@ -34,10 +34,14 @@ object Lingq {
     fun ChromeDriver.import(article: Article) {
         // Login Page
         get(url)
-        val userNameInput = findElementById("id_username")
-        userNameInput.sendKeys(user)
-        findElementById("id_password").sendKeys(pass)
-        userNameInput.submit()
+        try {
+            val userNameInput = findElementById("id_username")
+            userNameInput.sendKeys(user)
+            findElementById("id_password").sendKeys(pass)
+            userNameInput.submit()
+        } catch (ex: org.openqa.selenium.NoSuchElementException) {
+            println("Could not find Login form, assuming already logged in ...")
+        }
 
         // Import Page
         sleep(2000)
@@ -54,12 +58,12 @@ object Lingq {
 
         // Level
         findElementByCssSelector("#id_level").click()
-        sleep(500)
+        sleep(1000)
         findElementByClassName("field-4").click()
 
         // Course
         findElementById("id_collection").click()
-        sleep(500)
+        sleep(100)
         findElementByClassName("field-266730").click()
 
         val imagePath = article.imageFile.absolutePath
@@ -70,6 +74,8 @@ object Lingq {
         sleep(5000)
         findElementByClassName("finish").click()
 
+        sleep(500)
+        findElementByClassName("save-button").click()
         sleep(5000)
     }
 

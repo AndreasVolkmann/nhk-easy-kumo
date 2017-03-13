@@ -17,7 +17,7 @@ object PropertyReader {
     }
 
 
-    private fun load() = PropertyReader::class.java.classLoader.getResourceAsStream("app.properties").use {
+    private fun load() = PropertyReader::class.java.classLoader.getResourceAsStream("config.properties").use {
         properties.load(it)
         loaded = true
     }

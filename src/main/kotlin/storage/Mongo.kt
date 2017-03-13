@@ -3,10 +3,13 @@ package storage
 import com.mongodb.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.FindOneAndReplaceOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
-import com.mongodb.client.model.InsertOneOptions
+import com.mongodb.client.model.UpdateOptions
 import data.Article
+import data.Headline
 import org.bson.Document
+import org.bson.conversions.Bson
 
 /**
  * Created by Av on 3/12/2017.
@@ -30,7 +33,10 @@ object Mongo {
 
     fun saveArticles(articles: List<Article>) = Mongo {
         val docs = articles.map(Article::toDocument)
-        insertMany(docs)
+        docs.forEach {
+            val id = it["id"].toString()
+            findOneAndReplace(eq("id", id), it, FindOneAndReplaceOptions().upsert(true))
+        }
     }
 
     fun updateArticle(article: Article): Document? = Mongo {
@@ -43,9 +49,18 @@ object Mongo {
 
     fun filterImported(articles: List<Article>) = Mongo {
         articles.filter {
-            val match = find(eq("id", it.id)).map { it["id"] }
+            val match = find(eq("id", it.id)).filter { it["imported"] as Boolean }
             match.count() == 0 // no articles with this id found
         }
     }
+
+    fun filterHeadlines(headlines: List<Headline>) = Mongo {
+        headlines.filter {
+            val match = find(eq("id", it.id)).filter { it["imported"] as Boolean }
+            match.count() == 0
+        }
+    }
+
+    fun byId(id: String): Bson = eq("id", id)
 
 }
