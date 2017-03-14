@@ -73,10 +73,18 @@ object Lingq {
         pictures[1].sendKeys(imagePath)
         sleep(5000)
         findElementByClassName("finish").click()
-
         sleep(500)
+        save()
+
+        findElementById("id_share_status").click() // set status to shared
+        sleep(600)
+        findElementByClassName("field-shared").click()
+        save()
+    }
+
+    fun ChromeDriver.save() {
         findElementByClassName("save-button").click()
-        sleep(5000)
+        sleep(3000)
     }
 
 
