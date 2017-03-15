@@ -3,10 +3,13 @@ package lingq
 import PropertyReader.getProperty
 import data.Article
 import getDuration
+import net.jodah.failsafe.RetryPolicy
+import org.apache.logging.log4j.LogManager
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import storage.Mongo
 import java.lang.Thread.sleep
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by Av on 3/9/2017.
@@ -17,6 +20,12 @@ object Lingq {
     val user = getProperty("lingq.user")
     val pass = getProperty("lingq.pass")
     val options = ChromeOptions()
+    val logger = LogManager.getLogger(Lingq::class.java)!!
+
+    val retryPolicy = RetryPolicy()
+            .retryOn(org.openqa.selenium.ElementNotVisibleException::class.java)
+            .withDelay(1, TimeUnit.SECONDS)
+            .withMaxRetries(2)
 
     fun import(articles: List<Article>) {
         val driver = ChromeDriver(options)
@@ -40,45 +49,49 @@ object Lingq {
             findElementById("id_password").sendKeys(pass)
             userNameInput.submit()
         } catch (ex: org.openqa.selenium.NoSuchElementException) {
-            println("Could not find Login form, assuming already logged in ...")
+            logger.debug("Could not find Login form, assuming already logged in ...")
         }
 
+
         // Import Page
-        sleep(2000)
+        sleep(2500)
         findElementById("id_title").sendKeys(article.title)
         findElementById("id_text_ifr").sendKeys(article.content)
         findElementById("id_original_url").sendKeys(article.url)
 
         // audio
         findElementByClassName("lesson-audio-url-btn").click()
-        sleep(500)
+        sleep(1000)
         findElementById("id_external_audio").sendKeys(article.audioUrl)
         findElementById("id_duration").sendKeys(article.audioFile.getDuration().toString())
         findElementByClassName("select2-search__field").sendKeys("News,", "NHK,")
 
         // Level
         findElementByCssSelector("#id_level").click()
-        sleep(1000)
+        sleep(1500)
         findElementByClassName("field-4").click()
 
         // Course
         findElementById("id_collection").click()
-        sleep(100)
+        sleep(1000)
         findElementByClassName("field-266730").click()
 
         val imagePath = article.imageFile.absolutePath
         findElementByClassName("lesson-image").click()
-        sleep(500)
+        sleep(1000)
         val pictures = findElementsByClassName("picture")
         pictures[1].sendKeys(imagePath)
         sleep(5000)
         findElementByClassName("finish").click()
-        sleep(500)
+        sleep(1000)
         save()
 
+
         findElementById("id_share_status").click() // set status to shared
-        sleep(600)
-        findElementByClassName("field-shared").click()
+        sleep(1000)
+        val shared = findElementByClassName("field-shared")
+        println(shared.text)
+        shared.click()
         save()
     }
 

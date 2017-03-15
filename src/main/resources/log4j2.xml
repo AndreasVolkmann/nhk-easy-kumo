@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="DefaultPattern">%highlight{%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n}{ERROR=red, WARN=yellow}</Property>
+        <Property name="FilePattern">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${DefaultPattern}" />
+            <MarkerFilter marker="SQL" onMatch="DENY" onMismatch="ACCEPT" />
+        </Console>
+        <File name="Error" fileName="logs/error.log">
+            <PatternLayout pattern="${FilePattern}" />
+            <MarkerFilter marker="SQL" onMatch="DENY" onMismatch="ACCEPT" />
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="trace">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Error" level="warn" />
+        </Root>
+    </Loggers>
+</Configuration>

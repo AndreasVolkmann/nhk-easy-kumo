@@ -6,7 +6,7 @@ gen
 files
 build
 /chromedriver.exe
-
+logs
 
 .gradle
 # Ignore Gradle GUI config
