@@ -56,7 +56,9 @@ object Lingq {
         // Import Page
         sleep(2500)
         findElementById("id_title").sendKeys(article.title)
-        findElementById("id_text_ifr").sendKeys(article.content)
+        val finalContent = article.content.first() + article.content
+        val contentElement = findElementById("id_text_ifr")
+        contentElement.sendKeys(finalContent)
         findElementById("id_original_url").sendKeys(article.url)
 
         // audio
