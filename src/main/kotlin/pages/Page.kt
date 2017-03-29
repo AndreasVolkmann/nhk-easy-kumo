@@ -1,10 +1,14 @@
 package pages
 
+import org.apache.logging.log4j.Logger
 import org.openqa.selenium.chrome.ChromeDriver
+import storage.FileArchive
 import java.io.File
 
 
 interface Page<out T> {
+
+    val logger: Logger
 
     val name: String
 
@@ -22,7 +26,7 @@ interface Page<out T> {
     fun load(): String {
         if (dir.exists().not()) dir.mkdirs()
         if (file.exists().not()) {
-            println("Today's file $name has not been archived yet, fetching from web ...")
+            logger.info("Today's file $name has not been archived yet, fetching from web ...")
             val driver = ChromeDriver()
             try {
                 driver.get(url)
@@ -32,7 +36,7 @@ interface Page<out T> {
             } finally {
                 driver.close()
             }
-        } else println("Today's file $name has already been archived, reading from file ...")
+        } else logger.info("Today's file $name has already been archived, reading from file ...")
         return file.readText()
     }
 

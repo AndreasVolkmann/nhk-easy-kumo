@@ -1,8 +1,8 @@
 package lingq
 
-import PropertyReader.getProperty
+import util.PropertyReader.getProperty
 import data.Article
-import getDuration
+import util.getDuration
 import net.jodah.failsafe.RetryPolicy
 import org.apache.logging.log4j.LogManager
 import org.openqa.selenium.chrome.ChromeDriver
@@ -23,7 +23,7 @@ object Lingq {
     val logger = LogManager.getLogger(Lingq::class.java)!!
 
     val retryPolicy = RetryPolicy()
-            .retryOn(org.openqa.selenium.ElementNotVisibleException::class.java)
+            .retryOn(Exception::class.java)
             .withDelay(1, TimeUnit.SECONDS)
             .withMaxRetries(2)
 
@@ -40,7 +40,7 @@ object Lingq {
     }
 
 
-    fun ChromeDriver.import(article: Article) {
+    fun ChromeDriver.import(article: Article) = try {
         // Login Page
         get(url)
         try {
@@ -78,13 +78,7 @@ object Lingq {
         sleep(1000)
         findElementByClassName("field-266730").click()
 
-        val imagePath = article.imageFile.absolutePath
-        findElementByClassName("lesson-image").click()
-        sleep(1000)
-        val pictures = findElementsByClassName("picture")
-        pictures[1].sendKeys(imagePath)
-        sleep(5000)
-        findElementByClassName("finish").click()
+        addImage(article)
         sleep(1000)
         save()
 
@@ -95,6 +89,19 @@ object Lingq {
         println(shared.text)
         shared.click()
         save()
+    } catch (ex: Exception) {
+        logger.error("Article ${article.id} caused an error")
+        throw ex
+    }
+
+    fun ChromeDriver.addImage(article: Article) {
+        val imagePath = article.imageFile.absolutePath
+        findElementByClassName("lesson-image").click()
+        sleep(1000)
+        val pictures = findElementsByClassName("picture")
+        pictures[1].sendKeys(imagePath)
+        sleep(5000)
+        findElementByClassName("finish").click()
     }
 
     fun ChromeDriver.save() {

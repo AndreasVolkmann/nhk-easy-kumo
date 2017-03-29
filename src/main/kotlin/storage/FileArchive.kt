@@ -1,10 +1,17 @@
-import PropertyReader.getProperty
+package storage
+
+import util.PropertyReader.getProperty
 import data.Article
 import data.Headline
+import org.apache.logging.log4j.LogManager
 import storage.Mongo
+import util.getDuration
+import util.writeIfNotExists
 import java.io.File
 
 object FileArchive {
+
+    private val logger = LogManager.getLogger(FileArchive::class.java)
 
     val fileDir = getProperty("dir")
 
@@ -35,7 +42,7 @@ fun Article.makeFiles() {
 }
 
 
-fun Article.toHtml() = Application::class.java.classLoader.getResource("template.html")
+fun Article.toHtml() = FileArchive::class.java.classLoader.getResource("template.html")
         .readText()
         .replace("{title}", title)
         .replace("{articleUrl}", url)

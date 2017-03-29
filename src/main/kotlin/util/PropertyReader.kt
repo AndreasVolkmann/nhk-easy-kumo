@@ -1,3 +1,5 @@
+package util
+
 import java.util.*
 
 /**
@@ -6,7 +8,7 @@ import java.util.*
  */
 object PropertyReader {
 
-    private var properties: java.util.Properties = java.util.Properties()
+    private var properties: Properties = Properties()
     private var loaded: Boolean = false
 
     fun getProperty(key: String): String = loadProperties().getProperty(key)

@@ -1,3 +1,5 @@
+package util
+
 import javazoom.jl.decoder.Bitstream
 import org.jsoup.nodes.Element
 import java.io.BufferedInputStream

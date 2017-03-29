@@ -2,15 +2,20 @@ package pages
 
 import data.Article
 import data.Headline
-import getText
+import kotlinx.coroutines.experimental.future.future
+import kotlinx.coroutines.experimental.runBlocking
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import read
+import util.getText
+import util.read
 import java.net.URL
-import kotlin.streams.toList
 
 
 class ArticlePage(val headline: Headline) : Page<Article> {
+
+    override val logger = LogManager.getLogger(ArticlePage::class.java)!!
 
     override val url = headline.url
 
@@ -52,9 +57,10 @@ class ArticlePage(val headline: Headline) : Page<Article> {
     fun getContent(body: Element) = body.getElementById("newsarticle").getText()
 
     companion object {
-        fun getArticles(links: Collection<Headline>) = links.parallelStream().map {
-            ArticlePage(it).get()
-        }.toList()
+        fun getArticles(links: Collection<Headline>): List<Article> = runBlocking {
+            val jobs = links.map { future { ArticlePage(it).get() } }
+            jobs.map { it.join() }
+        }
     }
 
 

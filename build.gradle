@@ -30,6 +30,12 @@ task fatJar(type: Jar) {
 
 }
 
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
 repositories {
     maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     mavenCentral()
@@ -46,6 +52,7 @@ dependencies {
     compile 'org.mongodb:mongodb-driver:3.4.2'
     compile 'com.beust:jcommander:1.64'
     compile 'net.jodah:failsafe:1.0.3'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.14'
 
     testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M3"
     testCompile "org.amshove.kluent:kluent:1.16"

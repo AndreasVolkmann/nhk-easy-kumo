@@ -6,24 +6,24 @@ import org.junit.jupiter.api.Test
 /**
  * Created by Av on 3/27/2017.
  */
-internal class ProcessTest {
+internal class ProcessHandlerTest {
 
     @Test
     fun testRunning() {
-        val res = Process.isRunning()
+        val res = ProcessHandler.isRunning()
         println(res)
     }
 
     @Test
     fun sound() {
-        val pro = Process.start()
+        val pro = ProcessHandler.start()
         try {
             Thread.sleep(2000)
-            Process.isRunning() shouldEqualTo true
+            ProcessHandler.isRunning() shouldEqualTo true
         } finally {
             pro?.destroy()
             Thread.sleep(1000)
-            Process.isRunning() shouldEqualTo false
+            ProcessHandler.isRunning() shouldEqualTo false
         }
 
     }
