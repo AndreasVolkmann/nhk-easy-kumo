@@ -2,6 +2,7 @@ package lingq
 
 import util.PropertyReader.getProperty
 import data.Article
+import net.jodah.failsafe.Failsafe
 import util.getDuration
 import net.jodah.failsafe.RetryPolicy
 import org.apache.logging.log4j.LogManager
@@ -22,10 +23,10 @@ object Lingq {
     val options = ChromeOptions()
     val logger = LogManager.getLogger(Lingq::class.java)!!
 
-    val retryPolicy = RetryPolicy()
+    val retryPolicy: RetryPolicy = RetryPolicy()
             .retryOn(Exception::class.java)
             .withDelay(1, TimeUnit.SECONDS)
-            .withMaxRetries(2)
+            .withMaxRetries(5)
 
     fun import(articles: List<Article>) {
         val driver = ChromeDriver(options)
@@ -82,13 +83,14 @@ object Lingq {
         sleep(1000)
         save()
 
-
-        findElementById("id_share_status").click() // set status to shared
-        sleep(1000)
-        val shared = findElementByClassName("field-shared")
-        println(shared.text)
-        shared.click()
-        save()
+        Failsafe.with<Unit>(retryPolicy).run { _ ->
+            findElementById("id_share_status").click() // set status to shared
+            sleep(1000)
+            val shared = findElementByClassName("field-shared")
+            println(shared.text)
+            shared.click()
+            save()
+        }
     } catch (ex: Exception) {
         logger.error("Article ${article.id} caused an error")
         throw ex
@@ -104,7 +106,7 @@ object Lingq {
         findElementByClassName("finish").click()
     }
 
-    fun ChromeDriver.save() {
+    fun ChromeDriver.save() = Failsafe.with<Unit>(retryPolicy).run { _ ->
         findElementByClassName("save-button").click()
         sleep(3000)
     }
