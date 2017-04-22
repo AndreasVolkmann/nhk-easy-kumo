@@ -10,6 +10,7 @@ data class Article(
         val date: String,
         val content: String,
         val image: ByteArray,
+        val imageUrl: String? = null,
         val audio: ByteArray,
         val audioUrl: String,
         val dir: File,
@@ -28,7 +29,9 @@ data class Article(
             language = "ja",
             collection = 266730,
             external_audio = audioUrl,
-            duration = audioFile.getDuration()
+            duration = audioFile.getDuration(),
+            image = imageUrl,
+            share_status = "shared"
     )
 
 

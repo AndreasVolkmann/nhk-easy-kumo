@@ -29,21 +29,21 @@ class ArticlePage(val headline: Headline) : Page<Article> {
         val body = Jsoup.parse(text).body()
 
         val content = getContent(body)
-        val image = getImage(body)
+        val (imageUrl, image) = getImage(body)
         val (audioUrl, audio) = getAudio()
 
         return Article(id = headline.id, url = url, date = headline.date, content = content, title = headline.title,
-                image = image, audio = audio, audioUrl = audioUrl, dir = dir)
+                image = image, imageUrl = imageUrl, audio = audio, audioUrl = audioUrl, dir = dir)
     }
 
-    fun getImage(body: Element): ByteArray = if (Article.getImageFile(dir).exists()) ByteArray(0)
+    fun getImage(body: Element): Pair<String,ByteArray> = if (Article.getImageFile(dir).exists()) "" to ByteArray(0)
     else {
         val imgUrl = body.getElementById("mainimg")
                 .getElementsByTag("img").first()
                 .attr("src")
 
         val finalImageUrl = if (imgUrl.startsWith("http")) imgUrl else url.removeSuffix("html") + "jpg"
-        URL(finalImageUrl).read()
+        finalImageUrl to URL(finalImageUrl).read()
     }
 
 

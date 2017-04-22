@@ -14,7 +14,7 @@ data class Lesson(
         val level: String? = null, // DO NOT USE
         val external_audio: String? = null,
         val duration: Long? = null,
-        val image: ByteArray? = null,
+        val image: String? = null, // image url
         val tags: List<String>? = null
 ) {
 

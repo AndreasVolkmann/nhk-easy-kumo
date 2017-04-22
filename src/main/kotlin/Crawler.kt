@@ -1,6 +1,7 @@
 import data.Article
 import data.Headline
 import lingq.Lingq
+import lingq.LingqApi
 import pages.ArticlePage
 import pages.MainPage
 import storage.FileArchive
@@ -17,10 +18,15 @@ object Crawler {
         val articles = Crawler.fetchArticles() // crawl nhk for articles
         val filtered = NhkMongo.filterImported(articles) // filter for already imported
         logger.info("Found ${filtered.size} articles that have not been imported yet")
-        if (filtered.isNotEmpty()) {
-            FileArchive.archive(filtered) // save files
-            Lingq.import(filtered) // import to LingQ
-        } else Unit
+        if (filtered.isNotEmpty()) import(filtered)
+    }
+
+    fun import(articles: List<Article>) {
+        FileArchive.archive(articles) // save files
+        articles
+                .map(Article::toLesson)
+                .forEach { LingqApi.postLesson(it) }
+        //Lingq.import(filtered)
     }
 
     fun fetchArticles(): List<Article> {
