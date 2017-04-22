@@ -1,21 +1,15 @@
 package pages
 
 import Crawler
-import util.currentDate
 import data.Headline
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.core.Logger
-import util.getDate
-import util.getIdFromUrl
-import util.getText
-import util.getUrl
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import util.*
 
 
 class MainPage : Page<List<Headline>> {
 
-    override val logger = LogManager.getLogger(MainPage::class.java)!!
+    override val logger = this::class.getLogger()
 
     override val name = "Main_$currentDate.html"
     override val url = Crawler.mainUrl

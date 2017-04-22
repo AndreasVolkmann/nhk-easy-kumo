@@ -4,10 +4,9 @@ import data.Article
 import data.Headline
 import kotlinx.coroutines.experimental.future.future
 import kotlinx.coroutines.experimental.runBlocking
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import util.getLogger
 import util.getText
 import util.read
 import java.net.URL
@@ -15,7 +14,7 @@ import java.net.URL
 
 class ArticlePage(val headline: Headline) : Page<Article> {
 
-    override val logger = LogManager.getLogger(ArticlePage::class.java)!!
+    override val logger = this::class.getLogger()
 
     override val url = headline.url
 

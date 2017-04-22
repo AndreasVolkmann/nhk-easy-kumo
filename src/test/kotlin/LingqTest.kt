@@ -1,10 +1,8 @@
 import data.Article
 import lingq.Lingq
-import lingq.Lingq.import
 import org.amshove.kluent.shouldEqualTo
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.chrome.ChromeDriver
-import storage.Mongo
 import java.io.File
 
 

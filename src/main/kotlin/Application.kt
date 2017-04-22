@@ -1,13 +1,13 @@
 import com.beust.jcommander.Parameter
-import org.apache.logging.log4j.LogManager
 import storage.ProcessHandler
 import storage.stop
+import util.getLogger
 import java.awt.Toolkit
 
 
 object Application {
 
-    private val logger = LogManager.getLogger(Application::class.java)
+    private val logger = this::class.getLogger()
 
     @Parameter(names = arrayOf("--mongo", "-m"))
     var mongoPath = "D:\\data\\db"

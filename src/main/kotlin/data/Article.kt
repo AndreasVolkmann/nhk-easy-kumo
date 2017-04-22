@@ -1,5 +1,6 @@
 package data
 
+import util.getDuration
 import java.io.File
 
 data class Article(
@@ -20,6 +21,15 @@ data class Article(
     val audioFile = getAudioFile(dir)
 
     val htmlFile = getHtmlFile(dir)
+
+    fun toLesson() = Lesson(
+            title = title,
+            text = content,
+            language = "ja",
+            collection = 266730,
+            external_audio = audioUrl,
+            duration = audioFile.getDuration()
+    )
 
 
     companion object {

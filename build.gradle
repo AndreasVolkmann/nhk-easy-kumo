@@ -49,12 +49,15 @@ dependencies {
     compile "org.seleniumhq.selenium:selenium-chrome-driver:3.3.0"
     compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
     compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
-    compile 'org.mongodb:mongodb-driver:3.4.2'
+    compile group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.3"
+    compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
     compile 'com.beust:jcommander:1.64'
+    compile 'org.mongodb:mongodb-driver:3.4.2'
     compile 'net.jodah:failsafe:1.0.3'
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.14'
 
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M3"
-    testCompile "org.amshove.kluent:kluent:1.16"
+    testCompile("org.junit.platform:junit-platform-launcher:1.0.0-M4")
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
+    testCompile "org.amshove.kluent:kluent:1.19"
 
 }

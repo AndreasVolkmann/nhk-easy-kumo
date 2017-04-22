@@ -8,7 +8,7 @@ import net.jodah.failsafe.RetryPolicy
 import org.apache.logging.log4j.LogManager
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
-import storage.Mongo
+import storage.NhkMongo
 import java.lang.Thread.sleep
 import java.util.concurrent.TimeUnit
 
@@ -33,7 +33,7 @@ object Lingq {
         try {
             articles.forEach {
                 driver.import(it)
-                Mongo.updateArticle(it)
+                NhkMongo.updateArticle(it)
             }
         } finally {
             driver.quit()

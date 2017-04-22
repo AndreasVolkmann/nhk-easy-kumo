@@ -4,7 +4,6 @@ import util.PropertyReader.getProperty
 import data.Article
 import data.Headline
 import org.apache.logging.log4j.LogManager
-import storage.Mongo
 import util.getDuration
 import util.writeIfNotExists
 import java.io.File
@@ -17,7 +16,7 @@ object FileArchive {
 
     fun archive(articles: List<Article>) {
         articles.forEach(Article::makeFiles)
-        Mongo.saveArticles(articles)
+        NhkMongo.saveArticles(articles)
     }
 
     fun read(): List<Headline> = getFolders().flatMap {
