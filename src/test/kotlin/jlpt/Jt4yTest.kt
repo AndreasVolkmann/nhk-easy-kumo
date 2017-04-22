@@ -19,9 +19,9 @@ internal class Jt4yTest {
         println("Found ${lessons.size} lessons")
 
 
-        lessons.forEach {
-            JlptMongo.saveLesson(it)
-        }
+        //lessons.forEach {
+        //    JlptMongo.saveLesson(it)
+        //}
 
         //lessons.forEach { LingqApi.postLesson(it) }
 

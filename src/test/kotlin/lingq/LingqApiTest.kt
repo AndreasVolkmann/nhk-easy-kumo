@@ -20,6 +20,13 @@ internal class LingqApiTest {
         )
 
         LingqApi.postLesson(test)
+    }
+
+    @Test
+    fun getLessons() {
+
+        val lessons = LingqApi.getLessons(language = "ja", collection = 274307)
+        println(lessons)
 
     }
 

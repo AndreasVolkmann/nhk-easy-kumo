@@ -1,5 +1,6 @@
 package storage
 
+import lingq.LingqApi
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test
@@ -25,9 +26,12 @@ internal class JlptMongoTest {
         val empty = lessons.filter { it.text.isBlank() }.print()
 
 
-        (illegal + empty).shouldBeEmpty()
+        val exclude = illegal + empty
+        //(illegal + empty).shouldBeEmpty()
 
-        //lessons.filter { it in  }
+        lessons.filterNot { it in exclude }.forEach {
+            LingqApi.postLesson(it)
+        }
 
     }
 
