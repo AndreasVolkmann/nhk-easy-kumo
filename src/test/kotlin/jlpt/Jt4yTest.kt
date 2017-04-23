@@ -1,7 +1,8 @@
 package jlpt
 
-import lingq.LingqApi
+import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldEqualTo
+import org.amshove.kluent.shouldNotEqualTo
 import org.junit.jupiter.api.Test
 import storage.JlptMongo
 import java.net.URLDecoder.decode
@@ -12,20 +13,16 @@ import java.net.URLEncoder.encode
  */
 internal class Jt4yTest {
 
-
     @Test
     fun connect() {
         val lessons = Jt4y(fromFile = true).get()
         println("Found ${lessons.size} lessons")
 
-
-        //lessons.forEach {
-        //    JlptMongo.saveLesson(it)
-        //}
+        lessons.forEach {
+            JlptMongo.saveLesson(it)
+        }
 
         //lessons.forEach { LingqApi.postLesson(it) }
-
-
     }
 
     @Test
@@ -41,21 +38,43 @@ internal class Jt4yTest {
         println(uni)
         println(encode(uni, "UTF-8"))
 
-
         decode(uni, "UTF-8").let { println(it) }
         println(decode(res, "UTF-8"))
-
 
         val mid = url.substringAfter("grammar-").substringBefore("-")
         val start = url.substringBefore(mid)
         val end = url.substringAfter(mid)
         val final = start + decode(mid, "UTF-8") + end
-
-
         (start + mid + end) shouldEqualTo url
-
         println(final)
+    }
 
+    @Test
+    fun removeNonJap() {
+        val input = "どうせダメなんだなどと言っていては、何もできなくなるよ。 dou se dame nanda nado to itte ite wa, nanimo dekinakunaru yo. If you keep saying things like “it wont work anyway”"
+        val res = input.removeIllegalChars().removeNonJap()
+        res shouldEqualTo "どうせダメなんだなどと言っていては、何もできなくなるよ。"
+    }
+
+    @Test
+    fun removeIllegal() {
+        val input = "test―“”"
+        val res = input.removeIllegalChars()
+        res shouldEqualTo "test"
+        "–" shouldNotEqualTo "―"
+    }
+
+    @Test
+    fun canEncode() {
+        val term = "."
+        term.encodeable().shouldBeTrue()
+    }
+
+    @Test
+    fun endOfSentence() {
+        val noEnd = "test"
+        val res = noEnd.fixEndOfSentence()
+        res shouldEqualTo "$noEnd。"
     }
 
 }

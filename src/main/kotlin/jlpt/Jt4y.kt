@@ -2,6 +2,7 @@ package jlpt
 
 import data.Lesson
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import pages.Page
 import util.getLogger
 import java.net.URLDecoder
@@ -16,8 +17,6 @@ class Jt4y(val fromFile: Boolean = false) : Page<List<Lesson>> {
     override val name = "JLPT.html"
 
     override val url = "http://japanesetest4you.com/jlpt-n2-grammar-list/"
-
-    val encoder = Charsets.ISO_8859_1.newEncoder()!!
 
     val local = Jt4y::class.java.classLoader.getResource("JLPTN2GrammarList–Japanesetest4you.html").readText()
 
@@ -39,25 +38,27 @@ class Jt4y(val fromFile: Boolean = false) : Page<List<Lesson>> {
 
     fun extractLesson(lessonUrl: String) = Jsoup.connect(lessonUrl).get().let { doc ->
         val title = doc.getElementsByClass("title").first().text()
-                .filterNot { encoder.canEncode(it) }
+                .filterNot(Char::encodeable)
 
         val content = doc
                 .getElementsByClass("entry").first()
                 .getElementsByTag("p")
-                .map { it.text() }
-                .filter { it.isNotBlank() } // filter out empty lines
-                .map { it.replace("’", "") } // replace problematic chars
-                .filterNot { it.take(5).all { encoder.canEncode(it) } } // filter out lines that can be encoded with ANSI
+                .map(Element::text)
+                .filter(String::isNotBlank) // filter out empty lines
+                .map(String::removeIllegalChars) // replace problematic chars
+                .filterNot { it.take(5).all(Char::encodeable) } // filter out lines that can be encoded with ANSI
                 .drop(1) // drop the first line (form)
-                .map { it.dropLastWhile { encoder.canEncode(it) } } // remove non Japanese parts from the remaining lines
-                .joinToString("\r\n")
+                .map(String::removeNonJap) // remove non Japanese parts from the remaining lines
+                .map(String::fixEndOfSentence)
+                .joinToString("")
 
         Lesson(
                 language = "ja",
                 title = title,
                 text = content,
                 collection = 274307,
-                tags = listOf("JLPT", "Grammar")
+                tags = listOf("JLPT", "Grammar"),
+                url = lessonUrl
         )
     }
 

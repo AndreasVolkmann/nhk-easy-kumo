@@ -12,12 +12,15 @@ import org.apache.http.message.BasicHeader
 import org.apache.http.protocol.HTTP
 import org.apache.http.util.EntityUtils
 import util.PropertyReader
+import util.getLogger
 import java.nio.charset.Charset
 
 /**
  * Created by Av on 4/21/2017.
  */
 object LingqApi {
+
+    val logger = this::class.getLogger()
 
     val url = "https://www.lingq.com/api/v2/ja/lessons/"
     val key = PropertyReader.getProperty("lingq.key")
@@ -57,10 +60,11 @@ object LingqApi {
 
     fun getLessons(language: String, collection: Int) = getClient().use {
         val finalUrl = "https://www.lingq.com/api/languages/$language/course/?course=$collection" // alternate
+        logger.trace("Get Lessons: $finalUrl")
         val req = HttpGet(finalUrl)
         val res = it.execute(req)
         handleResponse(finalUrl, res)
-        formatResponse(res)
+        resToTitle(formatResponse(res))
     }
 
     fun handleResponse(url: String, response: CloseableHttpResponse) = if (response.statusLine.statusCode > 201) {

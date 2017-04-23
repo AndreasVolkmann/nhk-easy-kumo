@@ -31,7 +31,8 @@ object JlptMongo : Mongo {
                     language = it.getString("language"),
                     share_status = it.getString("share_status"),
                     collection = it.getInteger("collection"),
-                    tags = it["tags"] as List<String>
+                    tags = it["tags"] as List<String>,
+                    url = it.getString("url")
             )
         }.toList()
     }

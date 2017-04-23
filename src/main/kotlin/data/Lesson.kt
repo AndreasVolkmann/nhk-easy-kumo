@@ -15,7 +15,8 @@ data class Lesson(
         val external_audio: String? = null,
         val duration: Long? = null,
         val image: String? = null, // image url
-        val tags: List<String>? = null
+        val tags: List<String>? = null,
+        val url: String? = null
 ) {
 
     fun toDocument() = Document()
@@ -23,7 +24,8 @@ data class Lesson(
             .append("text", text)
             .append("language", language)
             .append("share_status", share_status)
-            .append("colletions", collection)
+            .append("collection", collection)
             .append("tags", tags)
+            .append("url", url)
 
 }
