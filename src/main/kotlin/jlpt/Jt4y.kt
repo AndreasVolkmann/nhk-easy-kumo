@@ -5,6 +5,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import pages.Page
 import util.getLogger
+import util.loadResource
 import java.net.URLDecoder
 
 /**
@@ -18,7 +19,7 @@ class Jt4y(val fromFile: Boolean = false) : Page<List<Lesson>> {
 
     override val url = "http://japanesetest4you.com/jlpt-n2-grammar-list/"
 
-    val local = Jt4y::class.java.classLoader.getResource("JLPTN2GrammarList–Japanesetest4you.html").readText()
+    val local = this::class.loadResource("JLPTN2GrammarList–Japanesetest4you.html")
 
     override fun get(): List<Lesson> = (if (fromFile) Jsoup.parse(local) else Jsoup.connect(url).get())
             .getElementsByClass("entry").first()
@@ -58,7 +59,9 @@ class Jt4y(val fromFile: Boolean = false) : Page<List<Lesson>> {
                 text = content,
                 collection = 274307,
                 tags = listOf("JLPT", "Grammar"),
-                url = lessonUrl
+                url = lessonUrl,
+                external_audio = "http://www.freesfx.co.uk/rx2/mp3s/6/18660_1464810669.mp3",
+                duration = 1
         )
     }
 

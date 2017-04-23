@@ -1,6 +1,7 @@
 package lingq
 
 import data.Lesson
+import jlpt.JlptManager
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 import storage.JlptMongo
@@ -17,26 +18,26 @@ internal class LingqApiTest {
                 text = "This is just a TEst",
                 collection = 274307,
                 language = "ja",
-                share_status = "private"
+                share_status = "shared",
+                level = "1"
         )
 
         LingqApi.postLesson(test)
     }
 
-    @Test
-    fun getLessons() {
-        val lessons = LingqApi.getLessons(language = "ja", collection = 274307)
-        println(lessons)
+    val regex = Regex("[a-zA-Z]")
+    fun getLessons() = LingqApi.getLessons(language = "ja", collection = 274307)
 
-    }
+
+    @Test
+    fun postLessons() = JlptManager.postLessons(5)
 
     @Test
     fun postFixed() {
-        val importedTitles = LingqApi.getLessons(language = "ja", collection = 274307)
+        val importedTitles = getLessons()
         importedTitles.shouldNotBeEmpty()
         importedTitles.take(5).forEach { println(it) }
 
-        val regex = Regex("[a-zA-Z]")
         JlptMongo.loadLessons()
                 .filter { it.text.isNotBlank() }
                 .filterNot { it.title in importedTitles }
