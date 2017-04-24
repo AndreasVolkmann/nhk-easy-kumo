@@ -13,6 +13,10 @@ object Application {
     var mongoPath = "D:\\data\\db"
         private set
 
+    @Parameter(names= arrayOf("--api", "-a"))
+    var useApi = false
+        private set
+
     @JvmStatic
     fun main(args: Array<String>) {
         System.setProperty("webdriver.chrome.driver", "chromedriver.exe")

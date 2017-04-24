@@ -23,10 +23,10 @@ object Crawler {
 
     fun import(articles: List<Article>) {
         FileArchive.archive(articles) // save files
-        articles
+        if (Application.useApi) articles
                 .map(Article::toLesson)
                 .forEach { LingqApi.postLesson(it) }
-        //Lingq.import(filtered)
+        else Lingq.import(articles)
     }
 
     fun fetchArticles(): List<Article> {

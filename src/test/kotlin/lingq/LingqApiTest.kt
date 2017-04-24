@@ -16,10 +16,11 @@ internal class LingqApiTest {
         val test = Lesson(
                 title = "あるいは",
                 text = "This is just a TEst",
-                collection = 274307,
+                collection = 274588,
                 language = "ja",
                 share_status = "shared",
-                level = "1"
+                level = "1",
+                image = "http://www3.nhk.or.jp/news/html/20170423/K10010958581_1704232057_1704232059_01_03.jpg"
         )
 
         LingqApi.postLesson(test)

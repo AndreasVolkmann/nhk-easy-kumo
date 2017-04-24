@@ -31,6 +31,7 @@ data class Article(
             external_audio = audioUrl,
             duration = audioFile.getDuration(),
             image = imageUrl,
+            tags = listOf("NHK", "News"),
             share_status = "shared"
     )
 

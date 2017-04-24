@@ -41,7 +41,7 @@ object LingqApi {
                 if (level != null) addProperty("level", level)
                 if (external_audio != null) addProperty("external_audio", external_audio)
                 if (duration != null) addProperty("duration", duration)
-                //if (image != null) addProperty("image" ,image) TODO support for image data
+                if (image != null) addProperty("image", image)
                 if (tags != null) add("tags", jsonArray(*tags.toTypedArray()))
             }
         }.toString()
