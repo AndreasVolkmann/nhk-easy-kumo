@@ -2,6 +2,7 @@ package jlpt
 
 import data.Lesson
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import pages.Page
 import util.getLogger
@@ -40,18 +41,7 @@ class Jt4y(val fromFile: Boolean = false) : Page<List<Lesson>> {
     fun extractLesson(lessonUrl: String) = Jsoup.connect(lessonUrl).get().let { doc ->
         val title = doc.getElementsByClass("title").first().text()
                 .filterNot(Char::encodeable)
-
-        val content = doc
-                .getElementsByClass("entry").first()
-                .getElementsByTag("p")
-                .map(Element::text)
-                .filter(String::isNotBlank) // filter out empty lines
-                .map(String::removeIllegalChars) // replace problematic chars
-                .filterNot { it.take(5).all(Char::encodeable) } // filter out lines that can be encoded with ANSI
-                .drop(1) // drop the first line (form)
-                .map(String::removeNonJap) // remove non Japanese parts from the remaining lines
-                .map(String::fixEndOfSentence)
-                .joinToString("")
+        val content = extractContent(doc)
 
         Lesson(
                 language = "ja",
@@ -64,6 +54,21 @@ class Jt4y(val fromFile: Boolean = false) : Page<List<Lesson>> {
                 duration = 1
         )
     }
+
+    fun extractContent(document: Document) = document
+            .getElementsByClass("entry").first()
+            .getElementsByTag("p")
+            .map(Element::text)
+            .filter(String::isNotBlank) // filter out empty lines
+            .joinToString("|")
+            .substringAfter("Example sentences:")
+            .split("|")
+            .map(String::removeIllegalChars) // replace problematic chars
+            .filterNot { it.take(5).all(Char::encodeable) } // filter out lines that can be encoded with ANSI
+            //.drop(1) // drop the first line (form)
+            .map(String::removeNonJap) // remove non Japanese parts from the remaining lines
+            .map(String::fixEndOfSentence)
+            .joinToString("")
 
 
 }

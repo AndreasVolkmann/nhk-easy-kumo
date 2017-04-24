@@ -3,8 +3,10 @@ package jlpt
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldEqualTo
 import org.amshove.kluent.shouldNotEqualTo
+import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import storage.JlptMongo
+import util.loadResource
 import java.net.URLDecoder.decode
 import java.net.URLEncoder.encode
 
@@ -21,8 +23,34 @@ internal class Jt4yTest {
         lessons.forEach {
             JlptMongo.saveLesson(it)
         }
+    }
 
-        //lessons.forEach { LingqApi.postLesson(it) }
+    @Test
+    fun includeFirstExample() = checkContent("FirstLineTest.html", lines = listOf(
+            "君は慎み深い人だ。彼が気に入っているだけのことはある。",
+            "なるほど彼はすぐれた美男であった。ヨーロッパじゅうに美男の名をとどろかしただけのことはある。"
+    ))
+
+    @Test
+    fun excludeForm() = checkContent("FormTest.html", listOf(
+            "今日中にファックス、あるいは、メールで送ってください。",
+            "あるいは、あなたの言うとおりかもしれません。",
+            "その男は不思議に思われるほど何も知らなかった。あるいは、話したくないのかもしれなかった。",
+            "来週の月曜日の午前はどうですか。あるいは火曜日の午後でもかまいませんが。",
+            "人間が未来を予想できないということは、あるいはいいことかもしれない。",
+            "彼女はわかっていた。あるいは、わかっていると思っていた。"))
+
+    @Test
+    fun advertisingBeforeForm() = checkContent("AdvertisingTest.html", lines = listOf(
+            "鈴木さんは字がきれいなだけでなく文章も上手だ。",
+            "あの歌手は歌が上手なだけでなく、自分で曲も作る。"
+    ))
+
+    fun checkContent(fileName: String, lines: List<String>) {
+        val html = this::class.loadResource(fileName)
+        val doc = Jsoup.parse(html)
+        val content = Jt4y().extractContent(doc)
+        content shouldEqualTo lines.joinToString("")
     }
 
     @Test

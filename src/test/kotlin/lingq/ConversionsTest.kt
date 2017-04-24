@@ -12,12 +12,8 @@ internal class ConversionsTest {
     @Test
     fun extractTitle() {
         val json = this::class.loadResource("CourseResponse.json")
-
         val titles = resToTitle(json)
-
         titles.print(5)
-
-
 
     }
 
