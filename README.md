@@ -1,5 +1,5 @@
 # NHK Easy 蜘蛛
-A web crawler to fetch today's top news articles from the NHK easy page.
+A web crawler to fetch today's top news articles from [the NHK easy page](http://www3.nhk.or.jp/news/easy/).
 
 I built this so that I can easily import the articles into LingQ, including the image and audio. 
 
