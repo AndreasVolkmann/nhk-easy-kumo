@@ -1,19 +1,17 @@
 import com.beust.jcommander.Parameter
 import storage.ProcessHandler
 import storage.stop
+import util.ErrorHandler
 import util.getLogger
-import java.awt.Toolkit
 
 
 object Application {
-
-    private val logger = this::class.getLogger()
 
     @Parameter(names = arrayOf("--mongo", "-m"))
     var mongoPath = "D:\\data\\db"
         private set
 
-    @Parameter(names= arrayOf("--api", "-a"))
+    @Parameter(names = arrayOf("--api", "-a"))
     var useApi = false
         private set
 
@@ -28,12 +26,15 @@ object Application {
             Crawler.fetchAndImport()
         } catch (ex: Exception) {
             logger.error(ex)
-            Toolkit.getDefaultToolkit().beep()
-            throw ex
+            ErrorHandler.handle(ex)
         } finally {
             process.stop()
         }
     }
 
+
+
+
+    private val logger = this::class.getLogger()
 
 }

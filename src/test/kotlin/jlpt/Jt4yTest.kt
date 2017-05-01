@@ -26,6 +26,18 @@ internal class Jt4yTest {
     }
 
     @Test
+    fun contentTest() = checkContent("ContentTest.html", listOf(
+            "彼女の笑顔にはどこか寂しげなところがあった。",
+            "彼女は苦しげにうめいて横たわった。",
+            "学生たちは楽しげにおしゃべりしていた。",
+            "「大丈夫？」彼は訝しげにもう一度聞いた。",
+            "老人が、何か言いたげに近づいて来た。",
+            "山田は片手で物憂げに髪を掻いた。",
+            "子供たちは庭でいかにも楽しげに遊んでいる。",
+            "「そうか」彼は考え深げに言った。"
+    ))
+
+    @Test
     fun includeFirstExample() = checkContent("FirstLineTest.html", lines = listOf(
             "君は慎み深い人だ。彼が気に入っているだけのことはある。",
             "なるほど彼はすぐれた美男であった。ヨーロッパじゅうに美男の名をとどろかしただけのことはある。"
