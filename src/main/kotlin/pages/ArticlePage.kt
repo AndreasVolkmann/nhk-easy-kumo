@@ -36,7 +36,7 @@ class ArticlePage(val headline: Headline) : Page<Article> {
                 image = image, imageUrl = imageUrl, audio = audio, audioUrl = audioUrl, dir = dir)
     }
 
-    fun getImage(body: Element): Pair<String,ByteArray> = if (Article.getImageFile(dir).exists()) "" to ByteArray(0)
+    fun getImage(body: Element): Pair<String, ByteArray> = if (Article.getImageFile(dir).exists()) "" to ByteArray(0)
     else {
         val imgUrl = body.getElementById("mainimg")
                 .getElementsByTag("img").first()
@@ -46,14 +46,18 @@ class ArticlePage(val headline: Headline) : Page<Article> {
         finalImageUrl to URL(finalImageUrl).read()
     }
 
-
     fun getAudio(): Pair<String, ByteArray> {
         val audioUrl = url.removeSuffix("html") + "mp3"
         return if (Article.getAudioFile(dir).exists()) audioUrl to ByteArray(0)
         else audioUrl to URL(audioUrl).read()
     }
 
-    fun getContent(body: Element) = body.getElementById("newsarticle").getText()
+    fun getContent(body: Element): String {
+        val content = body.getElementById("newsarticle").getText()
+        if (content.contains("<") and content.contains(">"))
+            throw Exception("Content of Article ${headline.id} contains illegal characters: $content")
+        else return content
+    }
 
     companion object {
         fun getArticles(links: Collection<Headline>): List<Article> = runBlocking {

@@ -31,9 +31,7 @@ class MainPage : Page<List<Headline>> {
     fun getNewsList(body: Element): List<Headline> = body.getElementById("topnewslist")
             .getElementsByTag("ul").first()
             .getElementsByTag("li") // all list items
-            .map {
-                it.extractHeadline(false)
-            }
+            .map { it.extractHeadline(false) }
 
 
     fun Element.extractHeadline(isTop: Boolean): Headline {

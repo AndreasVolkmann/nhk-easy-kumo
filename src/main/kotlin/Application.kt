@@ -32,9 +32,6 @@ object Application {
         }
     }
 
-
-
-
     private val logger = this::class.getLogger()
 
 }

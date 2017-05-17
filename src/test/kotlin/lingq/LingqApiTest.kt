@@ -31,7 +31,7 @@ internal class LingqApiTest {
 
 
     @Test
-    fun postLessons() = JlptManager.postLessons(5)
+    fun postLessons() = JlptManager.postLessons(10)
 
     @Test
     fun postFixed() {

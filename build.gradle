@@ -2,11 +2,10 @@ group 'me.avo'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.1'
+    ext.kotlin_version = '1.1.2-2'
     ext.log4j_version = '2.8.1'
 
     repositories {
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
         mavenCentral()
     }
     dependencies {
@@ -16,9 +15,7 @@ buildscript {
 
 apply plugin: 'kotlin'
 
-
 task fatJar(type: Jar) {
-
     manifest {
         attributes 'Implementation-Title': 'NHK-Easy-Kumo',
                 'Implementation-Version': version,
@@ -27,7 +24,6 @@ task fatJar(type: Jar) {
     baseName = project.name
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
-
 }
 
 kotlin {
@@ -37,7 +33,6 @@ kotlin {
 }
 
 repositories {
-    maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     mavenCentral()
     jcenter()
 }
@@ -56,8 +51,8 @@ dependencies {
     compile 'net.jodah:failsafe:1.0.3'
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.14'
 
-    testCompile("org.junit.platform:junit-platform-launcher:1.0.0-M4")
+    testCompile "org.junit.platform:junit-platform-launcher:1.0.0-M4"
     testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
-    testCompile "org.amshove.kluent:kluent:1.19"
+    testCompile "org.amshove.kluent:kluent:1.21"
 
 }
