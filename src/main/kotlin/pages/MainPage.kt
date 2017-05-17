@@ -6,7 +6,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import util.*
 
-
 class MainPage : Page<List<Headline>> {
 
     override val logger = this::class.getLogger()
@@ -40,9 +39,10 @@ class MainPage : Page<List<Headline>> {
                 .getElementsByTag(headingStyle).first()
                 .getElementsByTag("a").first()
         val url = link.getUrl()
-        val title = link.getText()
+        val title = link.getTitle()
         val date = this.getDate()
         val id = getIdFromUrl(url)
+        if (title.isBlank()) throw NhkException(id, "The title is blank")
         return Headline(id, title, date, url)
     }
 

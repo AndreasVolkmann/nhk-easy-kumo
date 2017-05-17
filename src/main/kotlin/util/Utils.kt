@@ -12,7 +12,9 @@ val sdf = SimpleDateFormat("yyyy-MM-dd")
 
 val currentDate: String get() = sdf.format(Date())
 
-fun Element.getText() = this.getElementsByTag("p").html()
+fun Element.getContent() = getElementsByTag("p").html().getText()
+
+fun String.getText() = this
         .replace(Regex("(?s)(<rt>.*?)(?:(?:\r*\n){2}|</rt>)"), "")
         .replace(Regex("(?s)(<span.*?)(?:(?:\r*\n){2}|>)"), "")
         .replace(Regex("(?s)(<a.*?)(?:(?:\r*\n){2}|>)"), "")
@@ -24,6 +26,8 @@ fun Element.getText() = this.getElementsByTag("p").html()
         .replace("</a>", "")
         .replace(Regex("( )+"), "")
         .trimEnd('\n')
+
+fun Element.getTitle() = html().getText()
 
 fun Element.getUrl() = makeUrl(this.attr("href"))
 

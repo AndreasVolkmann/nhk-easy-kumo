@@ -6,11 +6,8 @@ import kotlinx.coroutines.experimental.future.future
 import kotlinx.coroutines.experimental.runBlocking
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import util.getLogger
-import util.getText
-import util.read
+import util.*
 import java.net.URL
-
 
 class ArticlePage(val headline: Headline) : Page<Article> {
 
@@ -53,9 +50,9 @@ class ArticlePage(val headline: Headline) : Page<Article> {
     }
 
     fun getContent(body: Element): String {
-        val content = body.getElementById("newsarticle").getText()
+        val content = body.getElementById("newsarticle").getContent()
         if (content.contains("<") and content.contains(">"))
-            throw Exception("Content of Article ${headline.id} contains illegal characters: $content")
+            throw NhkException(headline.id, "Content contains illegal characters: $content")
         else return content
     }
 
