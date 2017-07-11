@@ -6,9 +6,7 @@ import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
 import storage.JlptMongo
 
-/**
- * Created by Av on 4/21/2017.
- */
+
 internal class LingqApiTest {
 
     @Test

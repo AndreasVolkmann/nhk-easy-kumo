@@ -5,9 +5,6 @@ import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 import util.loadResource
 
-/**
- * Created by Av on 5/17/2017.
- */
 internal class MainPageTest {
 
     @Test

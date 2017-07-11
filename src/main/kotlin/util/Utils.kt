@@ -24,6 +24,7 @@ fun String.getText() = this
         .replace("<p>", "")
         .replace("</p>", "")
         .replace("</a>", "")
+        .replace("<br>", " ")
         .replace(Regex("( )+"), "")
         .trimEnd('\n')
 

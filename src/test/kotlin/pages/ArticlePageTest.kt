@@ -44,4 +44,18 @@ internal class ArticlePageTest {
         content shouldEqualTo expectedContent
     }
 
+    @Test
+    fun `Content can contain urls`() {
+        val expectedContent = "九州では５日からの雨で、山が崩れたり、道や家に水が入ったりして、大きな被害が出ています。\n" +
+                "「震災がつなぐ全国ネットワーク」という団体は、このような水の被害があったあとしなければならないことをインターネットなどで紹介しています。\n" +
+                "家などの写真は被害がよくわかるように撮ります。そして、市や町の役所に被害を伝えて、「り災証明書」をもらうことが大事です。保険会社や大家にも連絡します。ほかに、ぬれた家具や携帯電話などをどうするかとか、家の掃除のやり方なども紹介しています。\n" +
+                "団体の人は「いま避難している人は、これから何をしなければならないのかわからなくて、心配だと思います。これを読んで少しでも安心してほしいです」と話しています。\n" +
+                "下のブログから見ることができます。http://blog.canpan.info/shintsuna/"
+        val html = this::class.loadResource("Article_k10011048511000.html")
+        val body = Jsoup.parse(html).body()
+        val content = dummyArticlePage.getContent(body)
+        println(content)
+        content shouldEqualTo expectedContent
+    }
+
 }
