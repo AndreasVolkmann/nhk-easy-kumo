@@ -9,9 +9,6 @@ import data.Headline
 import org.bson.Document
 import org.bson.conversions.Bson
 
-/**
- * Created by Av on 3/12/2017.
- */
 object NhkMongo : Mongo {
 
     override val database = "nhk"

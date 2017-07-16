@@ -3,9 +3,6 @@ package storage
 import org.amshove.kluent.shouldEqualTo
 import org.junit.jupiter.api.Test
 
-/**
- * Created by Av on 3/27/2017.
- */
 internal class ProcessHandlerTest {
 
     @Test

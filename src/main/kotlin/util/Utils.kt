@@ -81,6 +81,6 @@ fun File.getDuration(): Long = this.inputStream().use {
     val ms = h.ms_per_frame()
     val bitrate = h.bitrate()
     val frame = h.calculate_framesize()
-    println("Frame: $frame, ms: $ms, bitrate: $bitrate, channel: $tn, ${tn / 10000}" )
+    //println("Frame: $frame, ms: $ms, bitrate: $bitrate, channel: $tn, ${tn / 10000}" )
     tn / 10000
 }

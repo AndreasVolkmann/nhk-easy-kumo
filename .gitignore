@@ -6,6 +6,7 @@ gen
 files
 build
 /chromedriver.exe
+chromedriver
 logs
 
 .gradle
@@ -19,3 +20,5 @@ gradle-app.setting
 .gradletasknamecache
 
 config.properties
+
+*.jar

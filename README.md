@@ -5,7 +5,10 @@ I built this so that I can easily import the articles into LingQ, including the 
 
 Here is the course containing them: [NHK Easy LingQ Course](https://www.lingq.com/learn/ja/web/#/course/266730)
 
-The program is also responsible for other courses:
+The program relies on the [Selenium Chrome Driver](https://sites.google.com/a/chromium.org/chromedriver/downloads) which needs to be in the root project directory.
+Therefore, it cannot be run by a headless server.
+
+NHK-kumo is also responsible for other courses:
 * [JLPT N2 Grammar Course](https://www.lingq.com/learn/ja/web/#/course/274307)
 
 

@@ -12,9 +12,6 @@ import storage.NhkMongo
 import java.lang.Thread.sleep
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by Av on 3/9/2017.
- */
 object Lingq {
 
     const val url = "https://www.lingq.com/learn/ja/import/contents/?add"

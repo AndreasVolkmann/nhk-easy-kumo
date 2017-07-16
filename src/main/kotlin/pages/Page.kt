@@ -14,7 +14,7 @@ interface Page<out T> {
 
     val url: String
 
-    val path get() = "${FileArchive.fileDir}/articles/"
+    val path get() = "articles/"
 
     val dir get() = File(path)
     val file get() = File("$path/$name")

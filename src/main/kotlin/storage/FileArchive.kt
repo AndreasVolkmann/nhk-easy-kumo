@@ -10,9 +10,7 @@ import java.io.File
 
 object FileArchive {
 
-    private val logger = LogManager.getLogger(FileArchive::class.java)
-
-    val fileDir = getProperty("dir")
+    val fileDir = "" //getProperty("dir")
 
     fun archive(articles: List<Article>) {
         articles.forEach(Article::makeFiles)
@@ -29,7 +27,7 @@ object FileArchive {
         }
     }
 
-    fun getFolders(): Array<out File> = File("$fileDir/articles").listFiles()
+    fun getFolders(): Array<out File> = File("articles").listFiles()
 
 }
 

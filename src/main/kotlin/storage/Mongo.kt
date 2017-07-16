@@ -4,9 +4,6 @@ import com.mongodb.MongoClient
 import com.mongodb.client.MongoCollection
 import org.bson.Document
 
-/**
- * Created by Av on 4/1/2017.
- */
 interface Mongo {
 
     companion object {

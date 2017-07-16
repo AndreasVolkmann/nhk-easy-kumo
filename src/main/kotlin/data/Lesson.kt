@@ -2,9 +2,6 @@ package data
 
 import org.bson.Document
 
-/**
- * Created by Av on 4/22/2017.
- */
 data class Lesson(
         val language: String,
         val title: String,
