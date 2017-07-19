@@ -1,18 +1,15 @@
 package storage
 
+import isWindows
+import mongoPath
 import org.amshove.kluent.shouldEqualTo
 import org.junit.jupiter.api.Test
+import path
 
 internal class ProcessHandlerTest {
 
     @Test
-    fun testRunning() {
-        val res = ProcessHandler.isRunning()
-        println(res)
-    }
-
-    @Test
-    fun sound() {
+    fun sound() = try {
         val pro = ProcessHandler.start()
         try {
             Thread.sleep(2000)
@@ -22,7 +19,11 @@ internal class ProcessHandlerTest {
             Thread.sleep(1000)
             ProcessHandler.isRunning() shouldEqualTo false
         }
-
+    }  catch (e: Error) {
+        println("Windows: $isWindows")
+        println(path)
+        println(mongoPath)
+        throw e
     }
 
 
