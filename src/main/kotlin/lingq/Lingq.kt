@@ -1,26 +1,27 @@
 package lingq
 
-import util.PropertyReader.getProperty
 import data.Article
 import net.jodah.failsafe.Failsafe
-import util.getDuration
 import net.jodah.failsafe.RetryPolicy
 import org.apache.logging.log4j.LogManager
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
 import storage.NhkMongo
+import util.PropertyReader.getProperty
+import util.getDuration
+import util.getLogger
 import java.lang.Thread.sleep
 import java.util.concurrent.TimeUnit
 
-object Lingq {
+class Lingq(val collection: String) {
 
-    const val url = "https://www.lingq.com/learn/ja/import/contents/?add"
-    val user = getProperty("lingq.user")
-    val pass = getProperty("lingq.pass")
-    val options = ChromeOptions()
-    val logger = LogManager.getLogger(Lingq::class.java)!!
+    private val url = "https://www.lingq.com/learn/ja/import/contents/?add"
+    private val user = getProperty("lingq.user")
+    private val pass = getProperty("lingq.pass")
+    private val options = ChromeOptions()
+    private val logger = this::class.getLogger()
 
-    val retryPolicy: RetryPolicy = RetryPolicy()
+    private val retryPolicy: RetryPolicy = RetryPolicy()
             .retryOn(Exception::class.java)
             .withDelay(1, TimeUnit.SECONDS)
             .withMaxRetries(5)
@@ -38,7 +39,7 @@ object Lingq {
     }
 
 
-    fun ChromeDriver.import(article: Article) = try {
+    private fun ChromeDriver.import(article: Article) = try {
         // Login Page
         get(url)
         try {
@@ -49,7 +50,6 @@ object Lingq {
         } catch (ex: org.openqa.selenium.NoSuchElementException) {
             logger.debug("Could not find Login form, assuming already logged in ...")
         }
-
 
         // Import Page
         sleep(2500)
@@ -74,13 +74,13 @@ object Lingq {
         // Course
         findElementById("id_collection").click()
         sleep(1000)
-        findElementByClassName("field-266730").click()
+        findElementByClassName("field-$collection").click()
 
         addImage(article)
         sleep(1000)
         save()
 
-        Failsafe.with<Unit>(retryPolicy).run { _ ->
+        retry {
             findElementById("id_share_status").click() // set status to shared
             sleep(1000)
             val shared = findElementByClassName("field-shared")
@@ -93,7 +93,7 @@ object Lingq {
         throw ex
     }
 
-    fun ChromeDriver.addImage(article: Article) {
+    private fun ChromeDriver.addImage(article: Article) = retry {
         val imagePath = article.imageFile.absolutePath
         findElementByClassName("lesson-image").click()
         sleep(1000)
@@ -103,10 +103,12 @@ object Lingq {
         findElementByClassName("finish").click()
     }
 
-    fun ChromeDriver.save() = Failsafe.with<Unit>(retryPolicy).run { _ ->
+    private fun ChromeDriver.save() = retry {
         findElementByClassName("save-button").click()
         sleep(3000)
     }
+
+    private fun retry(block: () -> Unit) = Failsafe.with<Unit>(retryPolicy).run { _ -> block() }
 
 
 }

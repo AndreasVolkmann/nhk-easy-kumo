@@ -3,9 +3,6 @@ package util
 import java.awt.Toolkit
 import javax.swing.JOptionPane
 
-/**
- * Created by Av on 5/1/2017.
- */
 object ErrorHandler {
 
     fun handle(ex: Exception) {

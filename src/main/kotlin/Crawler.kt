@@ -8,14 +8,16 @@ import storage.FileArchive
 import storage.NhkMongo
 import util.getLogger
 
-object Crawler {
+class Crawler(collection: String, val useApi: Boolean) {
 
-    private val logger = this::class.getLogger()
+    val lingq = Lingq(collection)
 
-    const val mainUrl = "http://www3.nhk.or.jp/news/easy/"
+    companion object {
+        const val mainUrl = "http://www3.nhk.or.jp/news/easy/"
+    }
 
     fun fetchAndImport() {
-        val articles = Crawler.fetchArticles() // crawl nhk for articles
+        val articles = fetchArticles() // crawl nhk for articles
         val filtered = NhkMongo.filterImported(articles) // filter for already imported
         logger.info("Found ${filtered.size} articles that have not been imported yet")
         if (filtered.isNotEmpty()) import(filtered)
@@ -23,10 +25,10 @@ object Crawler {
 
     fun import(articles: List<Article>) {
         FileArchive.archive(articles) // save files
-        if (Application.useApi) articles
+        if (useApi) articles
                 .map(Article::toLesson)
                 .forEach { LingqApi.postLesson(it) }
-        else Lingq.import(articles)
+        else lingq.import(articles)
     }
 
     fun fetchArticles(): List<Article> {
@@ -39,7 +41,7 @@ object Crawler {
         val articles = ArticlePage.getArticles(headlines)
         if (articles.isNotEmpty()) {
             NhkMongo.saveArticles(articles)
-            Lingq.import(articles)
+            lingq.import(articles)
         }
     }
 
@@ -48,5 +50,6 @@ object Crawler {
         return NhkMongo.filterHeadlines(headlines)
     }
 
+    private val logger = this::class.getLogger()
 
 }

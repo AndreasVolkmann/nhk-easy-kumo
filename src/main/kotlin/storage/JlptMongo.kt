@@ -1,25 +1,16 @@
 package storage
 
-import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.result.UpdateResult
 import data.Lesson
-import org.bson.Document
 
-/**
- * Created by Av on 4/22/2017.
- */
 object JlptMongo : Mongo {
 
     override val database = "jlpt"
+    override val collection = "lessons"
 
-    const val col = "lessons"
-
-    operator fun <T> invoke(body: MongoCollection<Document>.() -> T) = this(col) {
-        body()
-    }
-
-    fun saveLesson(lesson: Lesson) = this {
+    fun saveLesson(lesson: Lesson): UpdateResult = this {
         replaceOne(eq("title", lesson.title), lesson.toDocument(), UpdateOptions().upsert(true))
     }
 

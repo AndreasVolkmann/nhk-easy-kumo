@@ -15,9 +15,6 @@ import util.PropertyReader
 import util.getLogger
 import java.nio.charset.Charset
 
-/**
- * Created by Av on 4/21/2017.
- */
 object LingqApi {
 
     val logger = this::class.getLogger()
@@ -73,6 +70,7 @@ object LingqApi {
         throw RuntimeException("Failed : HTTP error code : " + response.statusLine.statusCode)
     } else Unit
 
-    fun formatResponse(response: CloseableHttpResponse) = EntityUtils.toString(response.entity, Charset.forName("UTF-8"))
+    fun formatResponse(response: CloseableHttpResponse): String = EntityUtils
+            .toString(response.entity, Charset.forName("UTF-8"))
 
 }

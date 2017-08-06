@@ -2,9 +2,6 @@ import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.Test
 import storage.FileArchive
 
-/**
- * Created by Av on 3/13/2017.
- */
 internal class FileArchiveTest {
 
     @Test
@@ -14,16 +11,6 @@ internal class FileArchiveTest {
 
         headlines.forEach(::println)
         headlines.size shouldBeGreaterThan 1
-
-    }
-
-
-    @Test
-    fun reload() {
-
-
-        Crawler.reload()
-
 
     }
 

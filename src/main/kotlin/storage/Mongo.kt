@@ -14,8 +14,9 @@ interface Mongo {
     fun connect() = MongoClient(host, port)
 
     val database: String
+    val collection: String
 
-    operator fun <T> invoke(collection: String, body: MongoCollection<Document>.() -> T) = connect().use {
+    operator fun <T> invoke(body: MongoCollection<Document>.() -> T) = connect().use {
         val col = it.getDatabase(database).getCollection(collection)
         body(col)
     }

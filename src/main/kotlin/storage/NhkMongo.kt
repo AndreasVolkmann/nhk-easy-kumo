@@ -1,26 +1,20 @@
 package storage
 
-import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.FindOneAndReplaceOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import data.Article
 import data.Headline
 import org.bson.Document
-import org.bson.conversions.Bson
 
 object NhkMongo : Mongo {
 
     override val database = "nhk"
-    val collection = if (System.getProperty("ENV") == "TEST") "test" else "articles"
-
-    operator fun <T> invoke(body: MongoCollection<Document>.() -> T) = this(collection) {
-        body()
-    }
+    override val collection = if (System.getProperty("ENV") == "TEST") "test" else "articles"
 
     fun saveArticles(vararg articles: Article) = saveArticles(articles.toList())
 
-    fun saveArticles(articles: List<Article>) = NhkMongo {
+    fun saveArticles(articles: List<Article>) = this {
         val docs = articles.map(Article::toDocument)
         docs.forEach {
             val id = it["id"].toString()
@@ -28,28 +22,26 @@ object NhkMongo : Mongo {
         }
     }
 
-    fun updateArticle(article: Article): Document? = NhkMongo {
+    fun updateArticle(article: Article): Document? = this {
         findOneAndUpdate(eq("id", article.id), Document("\$set", Document("imported", true)), FindOneAndUpdateOptions().upsert(true))
     }
 
-    fun loadArticles(): List<Article> = NhkMongo {
+    fun loadArticles(): List<Article> = this {
         find().toList().map(Document::toArticle)
     }
 
-    fun filterImported(articles: List<Article>) = NhkMongo {
+    fun filterImported(articles: List<Article>) = this {
         articles.filter {
             val match = find(eq("id", it.id)).filter { it["imported"] as Boolean }
             match.count() == 0 // no articles with this id found
         }
     }
 
-    fun filterHeadlines(headlines: List<Headline>) = NhkMongo {
+    fun filterHeadlines(headlines: List<Headline>) = this {
         headlines.filter {
             val match = find(eq("id", it.id)).filter { it["imported"] as Boolean }
             match.count() == 0
         }
     }
-
-    fun byId(id: String): Bson = eq("id", id)
 
 }

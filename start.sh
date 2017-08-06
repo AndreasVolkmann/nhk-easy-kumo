@@ -1,5 +1,5 @@
 #!/bin/bash
-FILENAME="nhk-easy-crawler-1.1.jar"
+FILENAME="nhk-easy-crawler-1.2.jar"
 mv build/libs/* /
 
-java -jar ${FILENAME}
+java -jar ${FILENAME} -c 293928
