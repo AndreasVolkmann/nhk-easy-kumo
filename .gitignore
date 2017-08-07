@@ -24,3 +24,4 @@ config.properties
 *.jar
 /articles
 *.iml
+*.wav

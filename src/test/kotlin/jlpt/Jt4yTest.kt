@@ -4,20 +4,18 @@ import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldEqualTo
 import org.amshove.kluent.shouldNotEqualTo
 import org.jsoup.Jsoup
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import storage.JlptMongo
 import util.loadResource
 import java.net.URLDecoder.decode
 import java.net.URLEncoder.encode
 
-/**
- * Created by Av on 4/22/2017.
- */
 internal class Jt4yTest {
 
-    @Test
+    @Test @Disabled
     fun connect() {
-        val lessons = Jt4y(fromFile = true).get()
+        val lessons = Jt4y(Level.N5, fromFile = true).get()
         println("Found ${lessons.size} lessons")
 
         lessons.forEach {
@@ -59,9 +57,10 @@ internal class Jt4yTest {
     ))
 
     fun checkContent(fileName: String, lines: List<String>) {
+        val resource = Resource.File(fileName)
         val html = this::class.loadResource(fileName)
         val doc = Jsoup.parse(html)
-        val content = Jt4y().extractContent(doc)
+        val content = Jt4yLesson(resource).extractContent(doc)
         content shouldEqualTo lines.joinToString("")
     }
 

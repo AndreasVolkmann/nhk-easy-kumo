@@ -3,17 +3,13 @@ package jlpt
 import lingq.LingqApi
 import storage.JlptMongo
 
-/**
- * Created by Av on 4/23/2017.
- */
 object JlptManager {
 
     val regex = Regex("[a-zA-Z]")
 
     fun getImportedTitles() = LingqApi.getLessons(language = "ja", collection = 274307)
 
-    fun postLessons(amount: Int) {
-        val importedTitles = getImportedTitles()
+    fun postLessons(amount: Int) = getImportedTitles().let { importedTitles ->
         JlptMongo.loadLessons()
                 .filter { it.text.isNotBlank() }
                 .filterNot { it.title in importedTitles }
