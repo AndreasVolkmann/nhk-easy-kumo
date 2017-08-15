@@ -15,7 +15,7 @@ internal class Jt4yTest {
 
     @Test @Disabled
     fun connect() {
-        val lessons = Jt4y(Level.N5, fromFile = true).get()
+        val lessons = Jt4y(Level.N2, fromFile = true).get()
         println("Found ${lessons.size} lessons")
 
         lessons.forEach {

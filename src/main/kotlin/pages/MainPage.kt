@@ -8,8 +8,6 @@ import util.*
 
 class MainPage : Page<List<Headline>> {
 
-    override val logger = this::class.getLogger()
-
     override val name = "Main_$currentDate.html"
     override val url = Crawler.mainUrl
 
@@ -22,10 +20,7 @@ class MainPage : Page<List<Headline>> {
         return list + top
     }
 
-    fun getTopNews(body: Element): Headline {
-        val topNews = body.getElementById("topnews")
-        return topNews.extractHeadline(true)
-    }
+    fun getTopNews(body: Element): Headline = body.getElementById("topnews").extractHeadline(true)
 
     fun getNewsList(body: Element): List<Headline> = body.getElementById("topnewslist")
             .getElementsByTag("ul").first()
@@ -33,7 +28,7 @@ class MainPage : Page<List<Headline>> {
             .map { it.extractHeadline(false) }
 
 
-    fun Element.extractHeadline(isTop: Boolean): Headline {
+    fun Element.extractHeadline(isTop: Boolean): Headline = try {
         val headingStyle = if (isTop) "h2" else "h3"
         val link = this
                 .getElementsByTag(headingStyle).first()
@@ -43,8 +38,12 @@ class MainPage : Page<List<Headline>> {
         val date = this.getDate()
         val id = getIdFromUrl(url)
         if (title.isBlank()) throw NhkException(id, "The title is blank")
-        return Headline(id, title, date, url)
+        Headline(id, title, date, url)
+    } catch (ex: NullPointerException) {
+        throw Exception("There was a problem with the MainPage $name. Likely because the page didn't load correctly. Try reloading.", ex)
     }
 
+
+    override val logger = this::class.getLogger()
 
 }

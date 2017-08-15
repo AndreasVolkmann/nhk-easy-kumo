@@ -4,10 +4,6 @@ import data.Article
 import org.bson.Document
 import java.io.File
 
-/**
- * Created by Av on 3/12/2017.
- */
-
 fun Article.toDocument(): Document = Document()
         .append("id", id)
         .append("url", url)
@@ -16,7 +12,6 @@ fun Article.toDocument(): Document = Document()
         .append("content", content)
         .append("audioUrl", audioUrl)
         .append("imported", imported)
-
 
 fun Document.toArticle(): Article = Article(
         id = get("id").toString(),
