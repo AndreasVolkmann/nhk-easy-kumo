@@ -14,9 +14,9 @@ import java.util.concurrent.TimeUnit
 
 class Lingq(val collection: String) {
 
-    private val url = "https://www.me.avo.kumo.lingq.com/learn/ja/import/contents/?add"
-    private val user = getProperty("me.avo.kumo.lingq.user")
-    private val pass = getProperty("me.avo.kumo.lingq.pass")
+    private val url = "https://www.lingq.com/learn/ja/import/contents/?add"
+    private val user = getProperty("lingq.user")
+    private val pass = getProperty("lingq.pass")
     private val options = ChromeOptions()
     private val logger = this::class.getLogger()
 
@@ -96,8 +96,7 @@ class Lingq(val collection: String) {
         val imagePath = article.imageFile.absolutePath
         findElementByClassName("lesson-image").click()
         sleep(1000)
-        val pictures = findElementsByClassName("picture")
-        pictures[1].sendKeys(imagePath)
+        findElementsByClassName("picture")[1].sendKeys(imagePath)
         sleep(5000)
         findElementByClassName("finish").click()
     }

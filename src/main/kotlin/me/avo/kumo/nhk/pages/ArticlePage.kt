@@ -5,9 +5,7 @@ import kotlinx.coroutines.experimental.runBlocking
 import me.avo.kumo.nhk.Article
 import me.avo.kumo.nhk.Headline
 import me.avo.kumo.nhk.NhkException
-import me.avo.kumo.util.getContent
-import me.avo.kumo.util.getLogger
-import me.avo.kumo.util.read
+import me.avo.kumo.util.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.net.URL
@@ -38,12 +36,19 @@ class ArticlePage(val headline: Headline) : Page<Article> {
 
     fun getImage(body: Element): Pair<String, ByteArray> = if (Article.getImageFile(dir).exists()) "" to ByteArray(0)
     else {
-        val imgUrl = body.getElementById("mainimg")
-                .getElementsByTag("img").first()
+        val imgUrl = body
+                .getElementById("mainimg")
+                .getFirstByTag("img")
                 .attr("src")
 
         val finalImageUrl = if (imgUrl.startsWith("http")) imgUrl else url.removeSuffix("html") + "jpg"
-        finalImageUrl to URL(finalImageUrl).read()
+        val imageBytes = URL(finalImageUrl).read().let {
+            if (it.isEmpty()) {
+                println("EmptY!")
+                nhkLogo.read()
+            } else it
+        }
+        finalImageUrl to imageBytes
     }
 
     fun getAudio(): Pair<String, ByteArray> {
@@ -60,10 +65,14 @@ class ArticlePage(val headline: Headline) : Page<Article> {
     }
 
     companion object {
+
+        val nhkLogo: URL = this::class.java.classLoader.getResource("nhk-logo.png")
+
         fun getArticles(links: Collection<Headline>): List<Article> = runBlocking {
             val jobs = links.map { future { ArticlePage(it).get() } }
             jobs.map { it.join() }
         }
+
     }
 
 
