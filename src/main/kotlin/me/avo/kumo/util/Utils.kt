@@ -51,21 +51,17 @@ fun makeDate(text: String): String {
     return "$year-$month-$day"
 }
 
-fun String.addZero() = if (this.length == 1) "0$this" else this
-
+fun String.addZero() = if (length == 1) "0$this" else this
 
 fun getIdFromUrl(url: String) = url.substringAfterLast("/").substringBefore(".html")
-
 
 fun File.notExists() = !this.exists()
 
 fun File.writeIfNotExists(bytes: ByteArray) {
-    if (this.notExists()) this.writeBytes(bytes)
+    if (this.notExists() && bytes.isNotEmpty()) this.writeBytes(bytes)
 }
 
-fun File.writeIfNotExists(text: String) {
-    if (this.notExists()) this.writeBytes(text.toByteArray())
-}
+fun File.writeIfNotExists(text: String) = writeIfNotExists(text.toByteArray())
 
 fun URL.read() = try {
     BufferedInputStream(this.openStream()).use {

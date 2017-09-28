@@ -93,12 +93,15 @@ class Lingq(val collection: String) {
     }
 
     private fun ChromeDriver.addImage(article: Article) = retry {
-        val imagePath = article.imageFile.absolutePath
-        findElementByClassName("lesson-image").click()
-        sleep(1000)
-        findElementsByClassName("picture")[1].sendKeys(imagePath)
-        sleep(5000)
-        findElementByClassName("finish").click()
+        val file = article.imageFile
+        if (file.exists()) {
+            val imagePath = file.absolutePath
+            findElementByClassName("lesson-image").click()
+            sleep(1000)
+            findElementsByClassName("picture")[1].sendKeys(imagePath)
+            sleep(5000)
+            findElementByClassName("finish").click()
+        }
     }
 
     private fun ChromeDriver.save() = retry {

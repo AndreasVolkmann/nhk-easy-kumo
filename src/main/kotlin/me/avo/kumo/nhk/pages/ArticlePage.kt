@@ -5,7 +5,10 @@ import kotlinx.coroutines.experimental.runBlocking
 import me.avo.kumo.nhk.Article
 import me.avo.kumo.nhk.Headline
 import me.avo.kumo.nhk.NhkException
-import me.avo.kumo.util.*
+import me.avo.kumo.util.getContent
+import me.avo.kumo.util.getFirstByTag
+import me.avo.kumo.util.getLogger
+import me.avo.kumo.util.read
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.net.URL
@@ -42,12 +45,7 @@ class ArticlePage(val headline: Headline) : Page<Article> {
                 .attr("src")
 
         val finalImageUrl = if (imgUrl.startsWith("http")) imgUrl else url.removeSuffix("html") + "jpg"
-        val imageBytes = URL(finalImageUrl).read().let {
-            if (it.isEmpty()) {
-                println("EmptY!")
-                nhkLogo.read()
-            } else it
-        }
+        val imageBytes = URL(finalImageUrl).read()
         finalImageUrl to imageBytes
     }
 
@@ -66,11 +64,11 @@ class ArticlePage(val headline: Headline) : Page<Article> {
 
     companion object {
 
-        val nhkLogo: URL = this::class.java.classLoader.getResource("nhk-logo.png")
-
         fun getArticles(links: Collection<Headline>): List<Article> = runBlocking {
-            val jobs = links.map { future { ArticlePage(it).get() } }
-            jobs.map { it.join() }
+            links
+                    .map(::ArticlePage)
+                    .map { future { it.get() } }
+                    .map { it.join() }
         }
 
     }
