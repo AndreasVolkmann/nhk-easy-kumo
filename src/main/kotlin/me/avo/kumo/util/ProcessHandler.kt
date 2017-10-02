@@ -31,7 +31,7 @@ fun Process?.stop() = ProcessHandler.stop(this)
 
 val os: String = System.getProperty("os.name")
 val isWindows = os.contains("windows", true)
-val mongoPath = if (isWindows) "D:\\me.avo.kumo.data\\db" else "/me/avo/kumo/data/db"
+val mongoPath = if (isWindows) "D:\\data\\db" else "/data/db"
 
 val processName = if (isWindows) "mongod.exe" else "mongod"
 
