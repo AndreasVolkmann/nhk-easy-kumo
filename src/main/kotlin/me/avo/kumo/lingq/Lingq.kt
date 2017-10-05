@@ -1,22 +1,22 @@
 package me.avo.kumo.lingq
 
 import me.avo.kumo.nhk.Article
+import me.avo.kumo.nhk.NhkMongo
+import me.avo.kumo.util.Property
+import me.avo.kumo.util.getDuration
+import me.avo.kumo.util.getLogger
 import net.jodah.failsafe.Failsafe
 import net.jodah.failsafe.RetryPolicy
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
-import me.avo.kumo.nhk.NhkMongo
-import me.avo.kumo.util.PropertyReader.getProperty
-import me.avo.kumo.util.getDuration
-import me.avo.kumo.util.getLogger
 import java.lang.Thread.sleep
 import java.util.concurrent.TimeUnit
 
 class Lingq(val collection: String) {
 
     private val url = "https://www.lingq.com/learn/ja/import/contents/?add"
-    private val user = getProperty("lingq.user")
-    private val pass = getProperty("lingq.pass")
+    private val user = Property["lingq.user"]
+    private val pass = Property["lingq.pass"]
     private val options = ChromeOptions()
     private val logger = this::class.getLogger()
 
@@ -78,15 +78,17 @@ class Lingq(val collection: String) {
         addImage(article)
         sleep(1000)
         save()
-
+        sleep(3000)
         retry {
-            findElementById("id_share_status").click() // set status to shared
-            sleep(1000)
             val shared = findElementByClassName("field-shared")
-            println(shared.text)
-            shared.click()
-            save()
+            if (shared.text != "Shared") {
+                findElementById("id_share_status").click() // set status to shared
+                sleep(1000)
+                println(shared.text)
+                shared.click()
+            }
         }
+        save()
     } catch (ex: Exception) {
         logger.error("Article ${article.id} caused an error")
         throw ex
@@ -106,7 +108,6 @@ class Lingq(val collection: String) {
 
     private fun ChromeDriver.save() = retry {
         findElementByClassName("save-button").click()
-        sleep(3000)
     }
 
     private fun retry(block: () -> Unit) = Failsafe.with<Unit>(retryPolicy).run { _ -> block() }
