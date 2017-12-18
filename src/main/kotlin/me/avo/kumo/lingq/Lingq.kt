@@ -40,6 +40,7 @@ class Lingq(val collection: String) {
 
     private fun ChromeDriver.import(article: Article) = try {
         // Login Page
+        manage().window().maximize()
         get(url)
         try {
             val userNameInput = findElementById("id_username")

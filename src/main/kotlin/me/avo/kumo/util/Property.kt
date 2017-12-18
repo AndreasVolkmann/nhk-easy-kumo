@@ -9,7 +9,7 @@ import java.util.*
 object Property {
 
     val props = Properties().apply {
-        this::class.java.classLoader.getResourceAsStream("config.properties").use(this::load)
+        Property::class.java.classLoader.getResourceAsStream("config.properties").use(this::load)
     }
 
     operator fun get(key: String) = props[key].toString()
