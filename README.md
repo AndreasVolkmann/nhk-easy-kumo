@@ -10,7 +10,7 @@ Here are the courses containing them:
 * [NHK Easy 2017年・秋冬](https://www.lingq.com/learn/ja/web/#/course/293928)
 
 The program relies on the [Selenium Chrome Driver](https://sites.google.com/a/chromium.org/chromedriver/downloads) which needs to be in the root project directory.
-Therefore, it cannot be run by a headless server.
+Therefore, it cannot be run by a headless server. Remember to always use the latest version of the driver.
 
 NHK-kumo is also responsible for other courses:
 * [JLPT N2 Grammar Course](https://www.lingq.com/learn/ja/web/#/course/274307)

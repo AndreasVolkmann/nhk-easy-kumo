@@ -1,8 +1,7 @@
 package me.avo.kumo.nhk
 
-import me.avo.kumo.util.getDuration
-import me.avo.kumo.util.writeIfNotExists
-import java.io.File
+import me.avo.kumo.util.*
+import java.io.*
 
 object FileArchive {
 
@@ -25,19 +24,8 @@ object FileArchive {
 
 }
 
-fun Article.makeFiles() {
+private fun Article.makeFiles() {
     println("$date - $id - $title")
     imageFile.writeIfNotExists(image)
     audioFile.writeIfNotExists(audio)
-    htmlFile.writeIfNotExists(this.toHtml())
 }
-
-
-fun Article.toHtml() = FileArchive::class.java.classLoader.getResource("template.html")
-        .readText()
-        .replace("{title}", title)
-        .replace("{articleUrl}", url)
-        .replace("{audioUrl}", audioUrl)
-        .replace("{audioLength}", audioFile.getDuration().toString())
-        .replace("{body}", content)
-
