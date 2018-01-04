@@ -2,15 +2,11 @@ package me.avo.pages
 
 import me.avo.kumo.nhk.Headline
 import me.avo.kumo.nhk.pages.ArticlePage
-import org.amshove.kluent.shouldEqualTo
-import org.amshove.kluent.shouldNotStartWith
+import me.avo.kumo.util.*
+import org.amshove.kluent.*
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
-import me.avo.kumo.util.loadResource
 
-/**
- * Created by Av on 5/17/2017.
- */
 internal class ArticlePageTest {
 
     val dummyArticlePage = ArticlePage(headline = Headline("x", "x", "x", "x"))
@@ -57,6 +53,12 @@ internal class ArticlePageTest {
         val content = dummyArticlePage.getContent(body)
         println(content)
         content shouldEqualTo expectedContent
+    }
+
+    @Test
+    fun `Various tags`() {
+        val input = "<p><span class=\"colorL\"><ruby>北京市<rt>ぺきんし</rt></ruby></span>は<ruby>３日<rt>みっか</rt></ruby>、<span class=\"colorL\"><ruby>北京市<rt>ぺきんし</rt></ruby></span>の<ruby>去年<rt>きょねん</rt></ruby>のＰＭ２．５の<a href=\"javascript:void(0)\" class=\"dicWin\" id=\"id-0003\"><ruby><span class=\"under\">平均</span><rt>へいきん</rt></ruby></a>の<a href=\"javascript:void(0)\" class=\"dicWin\" id=\"id-0000\"><ruby><span class=\"under\">濃度</span><rt>のうど</rt></ruby></a>が１m<sup>3</sup>に５８マイクログラム（０．００００５８ｇ）になったと<a href=\"javascript:void(0)\" class=\"dicWin\" id=\"id-0004\"><ruby><span class=\"under\">発表</span><rt>はっぴょう</rt></ruby></a>しました。５<ruby>年<rt>ねん</rt></ruby><ruby>前<rt>まえ</rt></ruby>より３５．６％<ruby>下<rt>さ</rt></ruby>がりました。</p>"
+        input.getText() shouldContain "濃度が１m3に５８マイクログラム"
     }
 
 }

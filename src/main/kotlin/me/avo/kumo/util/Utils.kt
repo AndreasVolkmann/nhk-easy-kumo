@@ -1,12 +1,11 @@
 package me.avo.kumo.util
 
-import javazoom.jl.decoder.Bitstream
-import me.avo.kumo.nhk.Crawler
-import org.jsoup.nodes.Element
-import java.io.BufferedInputStream
-import java.io.File
-import java.net.URL
-import java.text.SimpleDateFormat
+import javazoom.jl.decoder.*
+import me.avo.kumo.nhk.*
+import org.jsoup.nodes.*
+import java.io.*
+import java.net.*
+import java.text.*
 import java.util.*
 
 val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -15,17 +14,10 @@ val currentDate: String get() = sdf.format(Date())
 
 fun Element.getContent() = getElementsByTag("p").html().getText()
 
+
 fun String.getText() = this
         .replace(Regex("(?s)(<rt>.*?)(?:(?:\r*\n){2}|</rt>)"), "")
-        .replace(Regex("(?s)(<span.*?)(?:(?:\r*\n){2}|>)"), "")
-        .replace(Regex("(?s)(<a.*?)(?:(?:\r*\n){2}|>)"), "")
-        .replace("<ruby>", "")
-        .replace("</ruby>", "")
-        .replace("</span>", "")
-        .replace("<p>", "")
-        .replace("</p>", "")
-        .replace("</a>", "")
-        .replace("<br>", " ")
+        .replace(Regex("(?s)(<.*?)(?:(?:\r*\n){2}|>)"), "")
         .replace(Regex("( )+"), "")
         .trimEnd('\n')
 
