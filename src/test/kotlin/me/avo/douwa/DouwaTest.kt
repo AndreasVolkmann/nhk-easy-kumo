@@ -1,7 +1,6 @@
 package me.avo.douwa
 
-import me.avo.kumo.douwa.Douwa
-import me.avo.kumo.lingq.Lingq
+import me.avo.kumo.other.douwa.Douwa
 import org.junit.jupiter.api.Test
 
 internal class DouwaTest {

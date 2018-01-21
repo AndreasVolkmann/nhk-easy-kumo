@@ -9,7 +9,7 @@ internal class FileArchiveTest {
     @Test
     fun readarchive() {
 
-        val headlines = FileArchive.read()
+        val headlines = FileArchive(TODO()).read()
 
         headlines.forEach(::println)
         headlines.size shouldBeGreaterThan 1

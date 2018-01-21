@@ -1,4 +1,4 @@
-package me.avo.kumo.douwa
+package me.avo.kumo.other.douwa
 
 import me.avo.kumo.util.getFirstByTag
 import org.jsoup.Jsoup

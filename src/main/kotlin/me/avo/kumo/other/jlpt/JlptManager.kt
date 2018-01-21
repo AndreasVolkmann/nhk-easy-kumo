@@ -1,4 +1,4 @@
-package me.avo.kumo.jlpt
+package me.avo.kumo.other.jlpt
 
 import me.avo.kumo.lingq.LingqApi
 

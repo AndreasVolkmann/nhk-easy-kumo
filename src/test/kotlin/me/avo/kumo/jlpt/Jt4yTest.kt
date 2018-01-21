@@ -1,5 +1,6 @@
 package me.avo.kumo.jlpt
 
+import me.avo.kumo.other.jlpt.*
 import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldEqualTo
 import org.amshove.kluent.shouldNotEqualTo

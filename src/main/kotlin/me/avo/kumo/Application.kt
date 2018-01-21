@@ -1,6 +1,8 @@
 package me.avo.kumo
 
-import me.avo.kumo.nhk.Crawler
+import com.github.salomonbrys.kodein.*
+import me.avo.kumo.nhk.*
+import me.avo.kumo.nhk.persistence.*
 import me.avo.kumo.util.ErrorHandler
 import me.avo.kumo.util.ProcessHandler
 import me.avo.kumo.util.driverName
@@ -9,21 +11,18 @@ import org.apache.logging.log4j.LogManager
 
 fun main(args: Array<String>) {
     Args.parse(args)
+    if (Args.help) return
     System.setProperty("webdriver.chrome.driver", driverName)
-    val process = if (ProcessHandler.isRunning()) null else ProcessHandler.start()
-    start(process)
+    start()
 }
 
-fun start(process: Process?) = try {
-    Thread.sleep(2000)
-    if (ProcessHandler.isRunning().not()) logger.warn("Process is not running!")
-    val crawler = Crawler(Args.collection, Args.useApi)
+fun start() = try {
+    val database: NhkDatabase = kodein.instance()
+    val crawler = Crawler(Args.collection, Args.useApi, database)
     crawler.fetchAndImport()
 } catch (ex: Exception) {
     logger.error(ex)
     ErrorHandler.handle(ex)
-} finally {
-    process.stop()
 }
 
 private val logger = LogManager.getLogger("Kumo")

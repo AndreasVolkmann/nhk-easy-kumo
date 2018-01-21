@@ -1,4 +1,4 @@
-package me.avo.kumo.jlpt
+package me.avo.kumo.other.jlpt
 
 import javazoom.jl.converter.Converter
 import java.io.File

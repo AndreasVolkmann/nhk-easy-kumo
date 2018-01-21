@@ -1,6 +1,6 @@
 package me.avo.storage
 
-import me.avo.kumo.jlpt.JlptMongo
+import me.avo.kumo.other.jlpt.JlptMongo
 import org.amshove.kluent.shouldBeEmpty
 import org.amshove.kluent.shouldBeTrue
 import org.junit.jupiter.api.Test

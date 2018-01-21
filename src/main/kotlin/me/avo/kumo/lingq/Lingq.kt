@@ -1,18 +1,14 @@
 package me.avo.kumo.lingq
 
-import me.avo.kumo.nhk.Article
-import me.avo.kumo.nhk.NhkMongo
-import me.avo.kumo.util.Property
-import me.avo.kumo.util.getDuration
-import me.avo.kumo.util.getLogger
-import net.jodah.failsafe.Failsafe
-import net.jodah.failsafe.RetryPolicy
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.chrome.ChromeOptions
+import me.avo.kumo.nhk.*
+import me.avo.kumo.nhk.persistence.*
+import me.avo.kumo.util.*
+import net.jodah.failsafe.*
+import org.openqa.selenium.chrome.*
 import java.lang.Thread.sleep
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
-class Lingq(val collection: String) {
+class Lingq(val collection: String, private val database: NhkDatabase) {
 
     private val url = "https://www.lingq.com/learn/ja/import/contents/?add"
     private val user = Property["lingq.user"]
@@ -30,7 +26,7 @@ class Lingq(val collection: String) {
         try {
             articles.forEach {
                 driver.import(it)
-                NhkMongo.updateArticle(it)
+                database.updateArticle(it)
             }
         } finally {
             driver.quit()

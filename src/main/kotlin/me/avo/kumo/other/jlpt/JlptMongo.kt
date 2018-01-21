@@ -1,4 +1,4 @@
-package me.avo.kumo.jlpt
+package me.avo.kumo.other.jlpt
 
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
@@ -8,7 +8,7 @@ import me.avo.kumo.util.Mongo
 
 object JlptMongo : Mongo {
 
-    override val database = "me/avo/kumo/jlpt"
+    override val database = "me/avo/kumo/other/jlpt"
     override val collection = "lessons"
 
     fun saveLesson(lesson: Lesson): UpdateResult = this {

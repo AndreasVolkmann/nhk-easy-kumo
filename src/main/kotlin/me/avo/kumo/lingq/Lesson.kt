@@ -1,6 +1,6 @@
 package me.avo.kumo.lingq
 
-import org.bson.Document
+import org.bson.*
 
 data class Lesson(
         val language: String,

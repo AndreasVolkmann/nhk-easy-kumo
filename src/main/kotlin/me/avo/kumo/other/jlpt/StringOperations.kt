@@ -1,4 +1,4 @@
-package me.avo.kumo.jlpt
+package me.avo.kumo.other.jlpt
 
 val encoder = Charsets.ISO_8859_1.newEncoder()!!
 

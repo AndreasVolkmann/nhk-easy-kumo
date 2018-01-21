@@ -1,13 +1,14 @@
 package me.avo.kumo.nhk
 
+import me.avo.kumo.nhk.persistence.*
 import me.avo.kumo.util.*
 import java.io.*
 
-object FileArchive {
+class FileArchive(private val database: NhkDatabase) {
 
     fun archive(articles: List<Article>) {
         articles.forEach(Article::makeFiles)
-        NhkMongo.saveArticles(articles)
+        database.saveArticles(articles)
     }
 
     fun read(): List<Headline> = getFolders().flatMap {

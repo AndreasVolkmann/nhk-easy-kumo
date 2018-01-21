@@ -1,4 +1,4 @@
-package me.avo.kumo.douwa
+package me.avo.kumo.other.douwa
 
 data class Hanashi(
         val title: String,

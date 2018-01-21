@@ -2,7 +2,7 @@ group 'me.avo'
 version '1.2'
 
 buildscript {
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = '1.2.20'
     ext.log4j_version = '2.10.0'
 
     repositories {
@@ -23,6 +23,7 @@ task fatJar(type: Jar) {
     }
     baseName = project.name
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
     with jar
 }
 
@@ -35,6 +36,7 @@ kotlin {
 repositories {
     mavenCentral()
     jcenter()
+    maven { url "http://dl.bintray.com/kotlin/exposed" }
 }
 
 dependencies {
@@ -45,16 +47,18 @@ dependencies {
     compile "org.seleniumhq.selenium:selenium-chrome-driver:3.8.1"
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.2'
     compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
-    compile group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.3"
+    compile group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.4"
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
     compile 'com.beust:jcommander:1.72'
     compile 'org.mongodb:mongodb-driver:3.5.0'
     compile 'net.jodah:failsafe:1.0.4'
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.20'
     compile group: "org.slf4j", name: "slf4j-simple", version: "1.7.25"
-    compile 'org.funktionale:funktionale-all:1.1'
+    compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
+    compile 'org.jetbrains.exposed:exposed:0.9.1'
+    compile 'org.xerial:sqlite-jdbc:3.21.0.1'
 
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.2"
-    testCompile "org.amshove.kluent:kluent:1.33"
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.3"
+    testCompile "org.amshove.kluent:kluent:1.34"
 
 }

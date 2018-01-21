@@ -1,9 +1,9 @@
 package me.avo.kumo.lingq
 
-import me.avo.kumo.jlpt.JlptManager
+import me.avo.kumo.other.jlpt.JlptManager
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.jupiter.api.Test
-import me.avo.kumo.jlpt.JlptMongo
+import me.avo.kumo.other.jlpt.JlptMongo
 
 
 internal class LingqApiTest {
