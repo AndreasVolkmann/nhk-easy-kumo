@@ -1,6 +1,6 @@
 package me.avo.pages
 
-import me.avo.kumo.nhk.Headline
+import me.avo.kumo.nhk.data.Headline
 import me.avo.kumo.nhk.pages.ArticlePage
 import me.avo.kumo.util.*
 import org.amshove.kluent.*

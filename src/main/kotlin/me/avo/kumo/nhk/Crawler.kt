@@ -1,17 +1,19 @@
 package me.avo.kumo.nhk
 
+import com.github.salomonbrys.kodein.*
 import me.avo.kumo.lingq.*
+import me.avo.kumo.nhk.data.*
 import me.avo.kumo.nhk.pages.*
 import me.avo.kumo.nhk.persistence.*
+import me.avo.kumo.nhk.processing.*
 import me.avo.kumo.util.*
 
-class Crawler(collection: String, val useApi: Boolean, val database: NhkDatabase) {
+class Crawler(collection: String, val useApi: Boolean, kodein: Kodein) {
 
-    val lingq = Lingq(collection, database)
-
-    companion object {
-        const val mainUrl = "http://www3.nhk.or.jp/news/easy/"
-    }
+    private val mainUrl = "http://www3.nhk.or.jp/news/easy/"
+    private val database: NhkDatabase = kodein.instance()
+    private val lingq = Lingq(collection, database)
+    private val tagger: ArticleTagger = kodein.instance()
 
     fun fetchAndImport() = fetchArticles()
             .let(database::filterImported)
@@ -19,15 +21,20 @@ class Crawler(collection: String, val useApi: Boolean, val database: NhkDatabase
             .let(this::import)
 
     fun import(articles: List<Article>) {
-        if (articles.isEmpty()) return
-        FileArchive(database).archive(articles) // save files
-        if (useApi) articles
+        val taggedArticles = if (articles.isEmpty()) return
+        else articles.map(tagger::tag)
+
+        FileArchive(database).archive(taggedArticles) // save files
+
+        if (useApi) taggedArticles
                 .map(Article::toLesson)
                 .map(LingqApi::postLesson)
-        else lingq.import(articles)
+        else lingq.import(taggedArticles)
     }
 
-    fun fetchArticles(): List<Article> = MainPage().get().let(ArticlePage.Companion::getArticles)
+    fun fetchArticles(): List<Article> = MainPage(mainUrl)
+            .get()
+            .let(ArticlePage.Companion::getArticles)
 
     private val logger = this::class.getLogger()
 

@@ -1,8 +1,8 @@
-package me.avo.kumo.nhk
+package me.avo.kumo.nhk.data
 
-import me.avo.kumo.lingq.Lesson
-import me.avo.kumo.util.getDuration
-import java.io.File
+import me.avo.kumo.lingq.*
+import me.avo.kumo.util.*
+import java.io.*
 
 data class Article(
         val id: String,
@@ -15,6 +15,7 @@ data class Article(
         val audio: ByteArray,
         val audioUrl: String,
         val dir: File,
+        val tags: List<String>,
         val imported: Boolean = false
 ) {
 
@@ -32,7 +33,7 @@ data class Article(
             external_audio = audioUrl,
             duration = audioFile.getDuration(),
             image = imageUrl,
-            tags = listOf("NHK", "News"),
+            tags = listOf("NHK", "News") + tags,
             share_status = "shared"
     )
 

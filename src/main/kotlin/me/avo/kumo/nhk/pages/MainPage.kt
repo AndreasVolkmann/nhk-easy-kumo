@@ -1,16 +1,14 @@
 package me.avo.kumo.nhk.pages
 
-import me.avo.kumo.nhk.Crawler
-import me.avo.kumo.nhk.Headline
-import me.avo.kumo.nhk.NhkException
+import me.avo.kumo.nhk.*
+import me.avo.kumo.nhk.data.*
 import me.avo.kumo.util.*
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
+import org.jsoup.*
+import org.jsoup.nodes.*
 
-class MainPage : Page<List<Headline>> {
+class MainPage(override val url: String) : Page<List<Headline>> {
 
     override val name = "Main_$currentDate.html"
-    override val url = Crawler.mainUrl
 
     override fun get(): List<Headline> {
         val text = load()

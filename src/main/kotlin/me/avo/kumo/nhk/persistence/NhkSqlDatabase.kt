@@ -1,6 +1,6 @@
-package me.avo.kumo.nhk
+package me.avo.kumo.nhk.persistence
 
-import me.avo.kumo.nhk.persistence.*
+import me.avo.kumo.nhk.data.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.*
 import org.joda.time.*

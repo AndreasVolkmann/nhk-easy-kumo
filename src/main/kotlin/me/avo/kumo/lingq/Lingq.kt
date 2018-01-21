@@ -1,6 +1,6 @@
 package me.avo.kumo.lingq
 
-import me.avo.kumo.nhk.*
+import me.avo.kumo.nhk.data.*
 import me.avo.kumo.nhk.persistence.*
 import me.avo.kumo.util.*
 import net.jodah.failsafe.*

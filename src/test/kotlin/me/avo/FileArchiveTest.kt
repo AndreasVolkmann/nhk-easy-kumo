@@ -2,7 +2,7 @@ package me.avo
 
 import org.amshove.kluent.shouldBeGreaterThan
 import org.junit.jupiter.api.Test
-import me.avo.kumo.nhk.FileArchive
+import me.avo.kumo.nhk.persistence.FileArchive
 
 internal class FileArchiveTest {
 

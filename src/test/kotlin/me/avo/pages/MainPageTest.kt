@@ -8,7 +8,7 @@ import me.avo.kumo.util.loadResource
 
 internal class MainPageTest {
 
-    @Test fun `Headline should have a title`() = MainPage()
+    @Test fun `Headline should have a title`() = MainPage("")
             .let { page ->
                 val html = this::class.loadResource("Main_2017-05-17.html")
                 val body = Jsoup.parse(html).body()

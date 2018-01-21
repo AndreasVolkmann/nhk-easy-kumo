@@ -4,6 +4,7 @@ version '1.2'
 buildscript {
     ext.kotlin_version = '1.2.20'
     ext.log4j_version = '2.10.0'
+    ext.deeplearning_version = '0.9.1'
 
     repositories {
         mavenCentral()
@@ -41,11 +42,14 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4j_version
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j_version
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: log4j_version
+
     compile "org.seleniumhq.selenium:selenium-chrome-driver:3.8.1"
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.2'
+
     compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
     compile group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.4"
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
@@ -57,6 +61,10 @@ dependencies {
     compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
     compile 'org.jetbrains.exposed:exposed:0.9.1'
     compile 'org.xerial:sqlite-jdbc:3.21.0.1'
+
+    compile 'com.atilika.kuromoji:kuromoji-ipadic:0.9.0'
+    compile "org.deeplearning4j:deeplearning4j-nlp:$deeplearning_version"
+    compile "org.nd4j:nd4j-native-platform:$deeplearning_version"
 
     testCompile "org.junit.jupiter:junit-jupiter-api:5.0.3"
     testCompile "org.amshove.kluent:kluent:1.34"

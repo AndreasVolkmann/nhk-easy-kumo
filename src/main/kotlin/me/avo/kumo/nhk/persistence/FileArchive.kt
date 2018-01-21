@@ -1,6 +1,6 @@
-package me.avo.kumo.nhk
+package me.avo.kumo.nhk.persistence
 
-import me.avo.kumo.nhk.persistence.*
+import me.avo.kumo.nhk.data.*
 import me.avo.kumo.util.*
 import java.io.*
 

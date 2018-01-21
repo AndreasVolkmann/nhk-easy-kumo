@@ -2,8 +2,8 @@ package me.avo.kumo.nhk.pages
 
 import kotlinx.coroutines.experimental.future.future
 import kotlinx.coroutines.experimental.runBlocking
-import me.avo.kumo.nhk.Article
-import me.avo.kumo.nhk.Headline
+import me.avo.kumo.nhk.data.Article
+import me.avo.kumo.nhk.data.Headline
 import me.avo.kumo.nhk.NhkException
 import me.avo.kumo.util.getContent
 import me.avo.kumo.util.getFirstByTag
@@ -34,7 +34,7 @@ class ArticlePage(val headline: Headline) : Page<Article> {
         val (audioUrl, audio) = getAudio()
 
         return Article(id = headline.id, url = url, date = headline.date, content = content, title = headline.title,
-                image = image, imageUrl = imageUrl, audio = audio, audioUrl = audioUrl, dir = dir)
+                image = image, imageUrl = imageUrl, audio = audio, audioUrl = audioUrl, dir = dir, tags = listOf())
     }
 
     fun getImage(body: Element): Pair<String, ByteArray> = if (Article.getImageFile(dir).exists()) "" to ByteArray(0)

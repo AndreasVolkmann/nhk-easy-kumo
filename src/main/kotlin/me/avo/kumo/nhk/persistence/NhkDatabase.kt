@@ -1,6 +1,6 @@
 package me.avo.kumo.nhk.persistence
 
-import me.avo.kumo.nhk.*
+import me.avo.kumo.nhk.data.*
 
 interface NhkDatabase {
 
