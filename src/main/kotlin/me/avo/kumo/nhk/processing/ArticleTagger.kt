@@ -22,7 +22,7 @@ class ArticleTagger(private val tokenizer: ArticleTokenizer, file: File) {
         .flatMap { token -> evaluateCategory(token) }
         .groupAverage()
         .sortedByDescending { it.second }
-        .filter { it.second > 0.1 }
+        .filterIndexed { index, (_, similarity) -> index == 0 || similarity > 0.1 }
         .take(2)
         .map { it.first }
         .map(Category::label)
