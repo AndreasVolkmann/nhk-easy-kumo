@@ -16,7 +16,8 @@
     </Appenders>
     <Loggers>
         <Logger name="org.mongodb" level="warn" />
-        <Root level="trace">
+
+        <Root level="warn">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="Error" level="warn" />
         </Root>

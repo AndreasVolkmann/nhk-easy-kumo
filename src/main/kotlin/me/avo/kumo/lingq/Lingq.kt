@@ -17,9 +17,9 @@ class Lingq(val collection: String, private val database: NhkDatabase) {
     private val logger = this::class.getLogger()
 
     private val retryPolicy: RetryPolicy = RetryPolicy()
-            .retryOn(Exception::class.java)
-            .withDelay(1, TimeUnit.SECONDS)
-            .withMaxRetries(5)
+        .retryOn(Exception::class.java)
+        .withDelay(1, TimeUnit.SECONDS)
+        .withMaxRetries(5)
 
     fun import(articles: List<Article>) {
         val driver = ChromeDriver(options)
@@ -60,7 +60,10 @@ class Lingq(val collection: String, private val database: NhkDatabase) {
         sleep(1000)
         findElementById("id_external_audio").sendKeys(article.audioUrl)
         findElementById("id_duration").sendKeys(article.audioFile.getDuration().toString())
-        findElementByClassName("select2-search__field").sendKeys("News,", "NHK,")
+
+        // Tags
+        val tags = (listOf("News", "NHK") + article.tags).map { "$it," }.toTypedArray()
+        findElementByClassName("select2-search__field").sendKeys(*tags)
 
         // Level
         findElementByCssSelector("#id_level").click()
@@ -108,6 +111,5 @@ class Lingq(val collection: String, private val database: NhkDatabase) {
     }
 
     private fun retry(block: () -> Unit) = Failsafe.with<Unit>(retryPolicy).run { _ -> block() }
-
 
 }

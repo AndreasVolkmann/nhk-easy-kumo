@@ -27,17 +27,24 @@ class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
     }
 
     override fun saveArticles(articles: List<Article>) = transaction {
-        articles.forEach { art ->
-            Articles.insert {
-                it[id] = art.id
-                it[url] = art.url
-                it[title] = art.title
-                it[date] = DateTime.parse(art.date)
-                it[content] = art.content
-                it[audioUrl] = art.audioUrl
-                it[imported] = art.imported
+        val alreadyExists = Articles
+            .slice(Articles.id)
+            .select { Articles.id inList articles.map(Article::id) }
+            .map { it[Articles.id] }
+
+        articles
+            .filterNot { alreadyExists.contains(it.id) }
+            .forEach { art ->
+                Articles.insert {
+                    it[id] = art.id
+                    it[url] = art.url
+                    it[title] = art.title
+                    it[date] = DateTime.parse(art.date)
+                    it[content] = art.content
+                    it[audioUrl] = art.audioUrl
+                    it[imported] = art.imported
+                }
             }
-        }
     }
 
     override fun updateArticle(article: Article): Unit = transaction {
@@ -50,8 +57,8 @@ class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
         val ids = articles.map(Article::id)
         val alreadyImported = transaction {
             Articles.slice(Articles.id)
-                    .select { Articles.id inList ids and (Articles.imported eq true) }
-                    .map { it[Articles.id] }
+                .select { Articles.id inList ids and (Articles.imported eq true) }
+                .map { it[Articles.id] }
         }
         return articles.filter { it.id !in alreadyImported }
     }

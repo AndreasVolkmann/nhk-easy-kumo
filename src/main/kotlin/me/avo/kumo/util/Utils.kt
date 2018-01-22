@@ -1,7 +1,6 @@
 package me.avo.kumo.util
 
 import javazoom.jl.decoder.*
-import me.avo.kumo.nhk.*
 import org.jsoup.nodes.*
 import java.io.*
 import java.net.*
@@ -14,19 +13,13 @@ val currentDate: String get() = sdf.format(Date())
 
 fun Element.getContent() = getElementsByTag("p").html().getText()
 
-
 fun String.getText() = this
-        .replace(Regex("(?s)(<rt>.*?)(?:(?:\r*\n){2}|</rt>)"), "")
-        .replace(Regex("(?s)(<.*?)(?:(?:\r*\n){2}|>)"), "")
-        .replace(Regex("( )+"), "")
-        .trimEnd('\n')
+    .replace(Regex("(?s)(<rt>.*?)(?:(?:\r*\n){2}|</rt>)"), "")
+    .replace(Regex("(?s)(<.*?)(?:(?:\r*\n){2}|>)"), "")
+    .replace(Regex("( )+"), "")
+    .trimEnd('\n')
 
 fun Element.getTitle() = html().getText()
-
-fun Element.getUrl() = makeUrl(this.attr("href"))
-
-fun makeUrl(part: String) = Crawler.mainUrl.removeSuffix("/") + part.removePrefix(".")
-
 
 const val gatsu = "月"
 const val nichi = "日"
@@ -56,14 +49,12 @@ fun File.writeIfNotExists(bytes: ByteArray) {
 fun File.writeIfNotExists(text: String) = writeIfNotExists(text.toByteArray())
 
 fun URL.read() = try {
-    BufferedInputStream(this.openStream()).use {
-        it.readBytes()
-    }
+    BufferedInputStream(this.openStream()).use { it.readBytes() }
 } catch (ex: Exception) {
     ByteArray(0)
 }
 
-fun File.getDuration(): Long = this.inputStream().use {
+fun File.getDuration(): Long = inputStream().use {
     val stream = Bitstream(it)
     val h = stream.readFrame()
     val tn = it.channel.size()
