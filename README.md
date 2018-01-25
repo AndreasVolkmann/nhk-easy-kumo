@@ -1,6 +1,7 @@
 # NHK Easy 蜘蛛
 <img src="https://lh3.googleusercontent.com/2CQfccUAMi-Zcy_6A2Lh6blLs7diKs0pMc6ymAva2k7-CBhHEmstlVDAQeT7syHTVSA=w300" alt="NHK Easy News" />
 
+### General ###
 A web crawler to fetch today's top news articles from [the NHK easy page](http://www3.nhk.or.jp/news/easy/).
 
 I built this so that I can easily import the articles into LingQ, including the image and audio. 
@@ -17,5 +18,10 @@ NHK-kumo is also responsible for other courses:
 
 
 More to come ...
+
+### Details ###
+
+TODO
+
 
 <a href="http://www.lingq.com/learn/ja/web/#/course/266730" title="Learn Japanese online."><img src="http://www.lingq.com/goodies/ja/avolkmann/badge.jpg" alt="I Am Learning Japanese online with LingQ." border="0"/></a>

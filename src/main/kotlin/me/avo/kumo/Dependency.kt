@@ -16,5 +16,6 @@ val kodein = Kodein {
     bind<File>() with singleton { File("D:\\Dev\\data\\jp\\model.bin.gz") }
     bind<ArticleTokenizer>() with singleton { ArticleTokenizer(includeVerbs) }
     bind<ArticleTagger>() with singleton { ArticleTagger(instance(), instance()) }
+    bind<FileArchive>() with singleton { FileArchive(instance()) }
 
 }

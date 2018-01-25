@@ -14,27 +14,27 @@ class Crawler(collection: String, val useApi: Boolean, kodein: Kodein) {
     private val database: NhkDatabase = kodein.instance()
     private val lingq = Lingq(collection, database)
     private val tagger: ArticleTagger = kodein.instance()
+    private val archive: FileArchive = kodein.instance()
 
     fun fetchAndImport() = fetchArticles()
-            .let(database::filterImported)
-            .also { logger.info("Found ${it.size} articles that have not been imported yet") }
-            .let(this::import)
+        .let(database::filterImported)
+        .also { logger.info("Found ${it.size} articles that have not been imported yet") }
+        .map(tagger::tag)
+        .also(archive::archive)
+        .let(this::import)
 
     fun import(articles: List<Article>) {
-        val taggedArticles = if (articles.isEmpty()) return
-        else articles.map(tagger::tag)
+        if (articles.isEmpty()) return
 
-        FileArchive(database).archive(taggedArticles) // save files
-
-        if (useApi) taggedArticles
-                .map(Article::toLesson)
-                .map(LingqApi::postLesson)
-        else lingq.import(taggedArticles)
+        if (useApi) articles
+            .map(Article::toLesson)
+            .map(LingqApi::postLesson)
+        else lingq.import(articles)
     }
 
     fun fetchArticles(): List<Article> = MainPage(mainUrl)
-            .get()
-            .let(ArticlePage.Companion::getArticles)
+        .get()
+        .let(ArticlePage.Companion::getArticles)
 
     private val logger = this::class.getLogger()
 
