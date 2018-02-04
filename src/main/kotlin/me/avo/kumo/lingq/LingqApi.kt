@@ -25,7 +25,7 @@ object LingqApi {
             .setDefaultHeaders(mutableListOf(BasicHeader("Authorization", "Token $key")))
             .build()
 
-    fun postLesson(lesson: Lesson) = getClient().use { client ->
+    fun postLesson(lesson: Lesson): Unit = getClient().use { client ->
         val content = lesson.toJson()
 
         val req = HttpPost(url).apply {

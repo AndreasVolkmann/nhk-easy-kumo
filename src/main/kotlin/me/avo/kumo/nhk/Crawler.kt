@@ -1,6 +1,7 @@
 package me.avo.kumo.nhk
 
 import com.github.salomonbrys.kodein.*
+import kotlinx.coroutines.experimental.future.*
 import me.avo.kumo.lingq.*
 import me.avo.kumo.nhk.data.*
 import me.avo.kumo.nhk.pages.*
@@ -23,18 +24,21 @@ class Crawler(collection: String, val useApi: Boolean, kodein: Kodein) {
         .also(archive::archive)
         .let(this::import)
 
-    fun import(articles: List<Article>) {
-        if (articles.isEmpty()) return
+    fun import(articles: List<Article>) = when {
+        articles.isEmpty() -> Unit
 
-        if (useApi) articles
+        useApi -> articles
             .map(Article::toLesson)
-            .map(LingqApi::postLesson)
-        else lingq.import(articles)
+            .forEach(LingqApi::postLesson)
+
+        else -> lingq.import(articles)
     }
 
     fun fetchArticles(): List<Article> = MainPage(mainUrl)
         .get()
-        .let(ArticlePage.Companion::getArticles)
+        .map(::ArticlePage)
+        .map { future { it.get() } }
+        .map { it.join() }
 
     private val logger = this::class.getLogger()
 

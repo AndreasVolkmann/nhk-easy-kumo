@@ -1,17 +1,21 @@
 package me.avo.kumo.util
 
-import java.awt.Toolkit
-import javax.swing.JOptionPane
+import org.apache.logging.log4j.*
+import java.awt.*
+import javax.swing.*
 
 object ErrorHandler {
 
     fun handle(ex: Exception) {
-        val optionPane = JOptionPane(ex, JOptionPane.WARNING_MESSAGE)
-        val dialog = optionPane.createDialog("蜘蛛 has encountered an error!")
+        logger.error("error", ex)
         Toolkit.getDefaultToolkit().beep()
-        dialog.isAlwaysOnTop = true
-        dialog.isVisible = true
+        JOptionPane(ex, JOptionPane.WARNING_MESSAGE).createDialog("蜘蛛 has encountered an error!").apply {
+            isAlwaysOnTop = true
+            isVisible = true
+        }
         throw ex
     }
+
+    private val logger = LogManager.getLogger("Kumo")
 
 }

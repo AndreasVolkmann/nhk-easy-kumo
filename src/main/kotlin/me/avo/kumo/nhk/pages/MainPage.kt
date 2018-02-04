@@ -10,14 +10,12 @@ class MainPage(override val url: String) : Page<List<Headline>> {
 
     override val name = "Main_$currentDate.html"
 
-    override fun get(): List<Headline> {
-        val text = load()
-        val body = Jsoup.parse(text).body()
+    override fun get(): List<Headline> = load()
+        .let(Jsoup::parse)
+        .body()
+        .let(this::getNews)
 
-        val top = getTopNews(body)
-        val list = getNewsList(body)
-        return list + top
-    }
+    fun getNews(body: Element): List<Headline> = getNewsList(body) + getTopNews(body)
 
     fun getTopNews(body: Element): Headline = body.getElementById("topnews").extractHeadline(true)
 
@@ -33,10 +31,10 @@ class MainPage(override val url: String) : Page<List<Headline>> {
             .getFirstByTag("a")
         val url = link.getUrl()
         val title = link.getTitle()
-        val date = this.getDate()
+        val date = getDate()
         val id = getIdFromUrl(url)
         if (title.isBlank()) throw NhkException(id, "The title is blank")
-        Headline(id, title, date, url)
+        Headline(id, title, date, link.getUrl())
     } catch (ex: NullPointerException) {
         throw Exception(
             "There was a problem with the MainPage $name. Likely because the page didn't load correctly. Try reloading.",

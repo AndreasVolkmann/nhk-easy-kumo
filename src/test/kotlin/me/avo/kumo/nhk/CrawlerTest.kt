@@ -23,5 +23,12 @@ internal class CrawlerTest {
 
     }
 
+    @Test fun fetchArticles() {
+
+        println("Before")
+        crawler.fetchArticles()
+        println("After")
+    }
+
 
 }

@@ -4,7 +4,6 @@ import org.apache.logging.log4j.Logger
 import org.openqa.selenium.chrome.ChromeDriver
 import java.io.File
 
-
 interface Page<out T> {
 
     val logger: Logger
@@ -29,7 +28,7 @@ interface Page<out T> {
             val driver = ChromeDriver()
             try {
                 driver.get(url)
-                Thread.sleep(3000)
+                Thread.sleep(2000)
                 val doc = driver.pageSource
                 writeFile(name, doc)
             } finally {

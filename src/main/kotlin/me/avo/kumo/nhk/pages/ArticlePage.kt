@@ -1,17 +1,11 @@
 package me.avo.kumo.nhk.pages
 
-import kotlinx.coroutines.experimental.future.future
-import kotlinx.coroutines.experimental.runBlocking
-import me.avo.kumo.nhk.data.Article
-import me.avo.kumo.nhk.data.Headline
-import me.avo.kumo.nhk.NhkException
-import me.avo.kumo.util.getContent
-import me.avo.kumo.util.getFirstByTag
-import me.avo.kumo.util.getLogger
-import me.avo.kumo.util.read
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import java.net.URL
+import me.avo.kumo.nhk.*
+import me.avo.kumo.nhk.data.*
+import me.avo.kumo.util.*
+import org.jsoup.*
+import org.jsoup.nodes.*
+import java.net.*
 
 class ArticlePage(val headline: Headline) : Page<Article> {
 
@@ -24,7 +18,7 @@ class ArticlePage(val headline: Headline) : Page<Article> {
     override val name = "Article_${headline.id}.html"
 
     override fun get(): Article {
-        if (dir.exists().not()) dir.mkdirs()
+        if (!dir.exists()) dir.mkdirs()
 
         val text = load()
         val body = Jsoup.parse(text).body()
@@ -63,17 +57,5 @@ class ArticlePage(val headline: Headline) : Page<Article> {
             throw NhkException(headline.id, "Content contains illegal characters: $content")
         else return content
     }
-
-    companion object {
-
-        fun getArticles(links: Collection<Headline>): List<Article> = runBlocking {
-            links
-                .map(::ArticlePage)
-                .map { future { it.get() } }
-                .map { it.join() }
-        }
-
-    }
-
 
 }

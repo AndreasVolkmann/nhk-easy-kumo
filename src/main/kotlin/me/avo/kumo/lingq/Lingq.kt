@@ -33,7 +33,6 @@ class Lingq(val collection: String, private val database: NhkDatabase) {
         }
     }
 
-
     private fun ChromeDriver.import(article: Article) = try {
         // Login Page
         manage().window().maximize()

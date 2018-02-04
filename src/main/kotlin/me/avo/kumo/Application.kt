@@ -14,9 +14,5 @@ fun start() = try {
     System.setProperty("webdriver.chrome.driver", driverName)
     Crawler(Args.collection, Args.useApi, kodein).fetchAndImport()
 } catch (ex: Exception) {
-    logger.error(ex)
     ErrorHandler.handle(ex)
 }
-
-private val logger = LogManager.getLogger("Kumo")
-

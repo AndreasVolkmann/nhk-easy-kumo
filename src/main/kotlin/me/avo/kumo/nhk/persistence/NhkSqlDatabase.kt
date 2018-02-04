@@ -6,17 +6,17 @@ import org.jetbrains.exposed.sql.transactions.*
 import org.joda.time.*
 import java.sql.*
 
-object Articles : Table("articles") {
-    val id = varchar("id", 20).primaryKey()
-    val url = varchar("url", 254)
-    val title = varchar("title", 254)
-    val date = datetime("date")
-    val content = text("content")
-    val audioUrl = varchar("audio_url", 254)
-    val imported = bool("imported")
-}
-
 class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
+
+    object Articles : Table("articles") {
+        val id = varchar("id", 20).primaryKey()
+        val url = varchar("url", 254)
+        val title = varchar("title", 254)
+        val date = datetime("date")
+        val content = text("content")
+        val audioUrl = varchar("audio_url", 254)
+        val imported = bool("imported")
+    }
 
     init {
         Database.connect(url, driver)
