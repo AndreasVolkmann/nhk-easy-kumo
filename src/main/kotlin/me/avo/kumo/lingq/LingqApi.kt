@@ -29,7 +29,7 @@ object LingqApi {
         val content = lesson.toJson()
 
         val req = HttpPost(url).apply {
-            entity = StringEntity(content, HTTP.UTF_8).apply {
+            entity = StringEntity(content, "UTF-8").apply {
                 contentType = BasicHeader("Content-type", "application/json; charset=utf-8")
             }
             println(entity.content.bufferedReader().use(BufferedReader::readText))

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 internal class ArticlePageTest {
 
-    val dummyArticlePage = ArticlePage(headline = Headline("x", "x", "x", "x"))
+    private val dummyArticlePage = ArticlePage(headline = Headline("x", "x", "x", "x"))
 
     @Test
     fun `Verify that there are no additional html tags in the content`() {
@@ -23,7 +23,7 @@ internal class ArticlePageTest {
         println(content)
 
         content shouldNotStartWith "<"
-        content shouldEqualTo expectedContent
+        content shouldBeEqualTo expectedContent
     }
 
     @Test
@@ -38,7 +38,7 @@ internal class ArticlePageTest {
         println(content)
 
         content shouldNotStartWith "<"
-        content shouldEqualTo expectedContent
+        content shouldBeEqualTo expectedContent
     }
 
     @Test
@@ -52,7 +52,7 @@ internal class ArticlePageTest {
         val body = Jsoup.parse(html).body()
         val content = dummyArticlePage.getContent(body)
         println(content)
-        content shouldEqualTo expectedContent
+        content shouldBeEqualTo expectedContent
     }
 
     @Test

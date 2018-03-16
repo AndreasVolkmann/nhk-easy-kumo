@@ -21,7 +21,9 @@ gradle-app.setting
 
 config.properties
 
-*.jar
+/*.jar
 /articles
 *.iml
 *.wav
+
+/logo.png

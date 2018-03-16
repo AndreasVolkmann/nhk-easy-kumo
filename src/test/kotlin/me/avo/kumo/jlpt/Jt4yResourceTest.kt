@@ -1,6 +1,7 @@
 package me.avo.kumo.jlpt
 
 import me.avo.kumo.other.jlpt.*
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldEqualTo
 import org.junit.jupiter.api.Test
 
@@ -12,7 +13,7 @@ class Jt4yResourceTest {
 
 
         Jt4yLesson(resource).extractAudio(resource.load()).let {
-            it.first() shouldEqualTo "http://japanesetest4you.com/audio/n5g-no1-1.mp3?_=1"
+            it.first() shouldBeEqualTo "http://japanesetest4you.com/audio/n5g-no1-1.mp3?_=1"
             println(it)
 
         }

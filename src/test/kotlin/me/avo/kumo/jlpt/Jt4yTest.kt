@@ -1,13 +1,11 @@
 package me.avo.kumo.jlpt
 
 import me.avo.kumo.other.jlpt.*
-import org.amshove.kluent.shouldBeTrue
-import org.amshove.kluent.shouldEqualTo
-import org.amshove.kluent.shouldNotEqualTo
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import me.avo.kumo.util.loadResource
+import org.amshove.kluent.*
 import java.net.URLDecoder.decode
 import java.net.URLEncoder.encode
 
@@ -61,7 +59,7 @@ internal class Jt4yTest {
         val html = this::class.loadResource(fileName)
         val doc = Jsoup.parse(html)
         val content = Jt4yLesson(resource).extractContent(doc)
-        content shouldEqualTo lines.joinToString("")
+        content shouldBeEqualTo lines.joinToString("")
     }
 
     @Test
@@ -84,7 +82,7 @@ internal class Jt4yTest {
         val start = url.substringBefore(mid)
         val end = url.substringAfter(mid)
         val final = start + decode(mid, "UTF-8") + end
-        (start + mid + end) shouldEqualTo url
+        (start + mid + end) shouldBeEqualTo url
         println(final)
     }
 
@@ -92,15 +90,15 @@ internal class Jt4yTest {
     fun removeNonJap() {
         val input = "どうせダメなんだなどと言っていては、何もできなくなるよ。 dou se dame nanda nado to itte ite wa, nanimo dekinakunaru yo. If you keep saying things like “it wont work anyway”"
         val res = input.removeIllegalChars().removeNonJap()
-        res shouldEqualTo "どうせダメなんだなどと言っていては、何もできなくなるよ。"
+        res shouldBeEqualTo "どうせダメなんだなどと言っていては、何もできなくなるよ。"
     }
 
     @Test
     fun removeIllegal() {
         val input = "test―“”"
         val res = input.removeIllegalChars()
-        res shouldEqualTo "test"
-        "–" shouldNotEqualTo "―"
+        res shouldBeEqualTo "test"
+        "–" shouldNotBeEqualTo "―"
     }
 
     @Test
@@ -113,7 +111,7 @@ internal class Jt4yTest {
     fun endOfSentence() {
         val noEnd = "test"
         val res = noEnd.fixEndOfSentence()
-        res shouldEqualTo "$noEnd。"
+        res shouldBeEqualTo "$noEnd。"
     }
 
 }
