@@ -9,6 +9,7 @@ I built this so that I can easily import the articles into LingQ, including the 
 Here are the courses containing them: 
 * [NHK Easy 2017年・春夏](https://www.lingq.com/learn/ja/web/#/course/266730)
 * [NHK Easy 2017年・秋冬](https://www.lingq.com/learn/ja/web/#/course/293928)
+* [NHK Easy 2018年・春夏](https://www.lingq.com/learn/ja/web/course/330868)
 
 The program relies on the [Selenium Chrome Driver](https://sites.google.com/a/chromium.org/chromedriver/downloads) which needs to be in the root project directory.
 Therefore, it cannot be run by a headless server. Remember to always use the latest version of the driver.
