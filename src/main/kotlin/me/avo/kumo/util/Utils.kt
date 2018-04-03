@@ -19,12 +19,8 @@ fun String.getText() = this
     .replace(Regex("( )+"), "")
     .trimEnd('\n')
 
-fun Element.getTitle() = html().getText()
-
 const val gatsu = "月"
 const val nichi = "日"
-
-fun Element.getDate() = makeDate(this.getElementsByClass("newsDate").first().text())
 
 fun makeDate(text: String): String {
     val stripped = text.removeSurrounding("[", "]").substringBefore(nichi)
@@ -37,8 +33,6 @@ fun makeDate(text: String): String {
 }
 
 fun String.addZero() = if (length == 1) "0$this" else this
-
-fun getIdFromUrl(url: String) = url.substringAfterLast("/").substringBefore(".html")
 
 fun File.notExists() = !this.exists()
 

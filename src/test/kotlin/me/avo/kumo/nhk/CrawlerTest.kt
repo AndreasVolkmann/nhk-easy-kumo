@@ -1,18 +1,18 @@
 package me.avo.kumo.nhk
 
-import com.github.salomonbrys.kodein.*
-import me.avo.kumo.*
-import me.avo.kumo.nhk.data.*
-import me.avo.kumo.nhk.processing.*
-import org.amshove.kluent.*
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import com.github.salomonbrys.kodein.instance
+import me.avo.kumo.kodein
+import me.avo.kumo.nhk.data.Article
+import me.avo.kumo.nhk.processing.ArticleTagger
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 
 internal class CrawlerTest {
 
     private val crawler = Crawler("", false, kodein)
     private val tagger: ArticleTagger = kodein.instance()
 
+    @Disabled
     @Test fun `verify tagging`() {
 
         crawler.fetchArticles()
@@ -22,13 +22,5 @@ internal class CrawlerTest {
             .forEach(::println)
 
     }
-
-    @Test fun fetchArticles() {
-
-        println("Before")
-        crawler.fetchArticles()
-        println("After")
-    }
-
 
 }

@@ -9,7 +9,7 @@ import java.sql.*
 class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
 
     object Articles : Table("articles") {
-        val id = varchar("id", 20).primaryKey()
+        val id = varchar("id", 20).primaryKey().uniqueIndex()
         val url = varchar("url", 254)
         val title = varchar("title", 254)
         val date = datetime("date")

@@ -1,4 +1,4 @@
-package me.avo.pages
+package me.avo.kumo.pages
 
 import me.avo.kumo.nhk.data.Headline
 import me.avo.kumo.nhk.pages.ArticlePage

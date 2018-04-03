@@ -2,7 +2,7 @@ group 'me.avo'
 version '1.2'
 
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.31'
     ext.log4j_version = '2.10.0'
     ext.deeplearning_version = '0.9.1'
 
