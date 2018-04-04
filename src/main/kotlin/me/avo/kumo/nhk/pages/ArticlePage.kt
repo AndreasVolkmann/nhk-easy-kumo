@@ -1,11 +1,14 @@
 package me.avo.kumo.nhk.pages
 
-import me.avo.kumo.nhk.*
-import me.avo.kumo.nhk.data.*
-import me.avo.kumo.util.*
-import org.jsoup.*
-import org.jsoup.nodes.*
-import java.net.*
+import me.avo.kumo.nhk.NhkException
+import me.avo.kumo.nhk.data.Article
+import me.avo.kumo.nhk.data.Headline
+import me.avo.kumo.util.getLogger
+import me.avo.kumo.util.getText
+import me.avo.kumo.util.read
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import java.net.URL
 
 class ArticlePage(val headline: Headline) : Page<Article> {
 
@@ -24,7 +27,7 @@ class ArticlePage(val headline: Headline) : Page<Article> {
         val body = Jsoup.parse(text).body()
 
         val content = getContent(body)
-        val (imageUrl, image) = getImage(body)
+        val (imageUrl, image) = getImage(body) ?: null to null
         val (audioUrl, audio) = getAudio()
 
         return Article(
@@ -33,16 +36,14 @@ class ArticlePage(val headline: Headline) : Page<Article> {
         )
     }
 
-    fun getImage(body: Element): Pair<String, ByteArray> = if (Article.getImageFile(dir).exists()) "" to ByteArray(0)
+    fun getImage(body: Element): Pair<String, ByteArray>? = if (Article.getImageFile(dir).exists()) null
     else {
-        val imgUrl = body
-            .getElementById("mainimg")
-            .getFirstByTag("img")
-            .attr("src")
-
-        val finalImageUrl = if (imgUrl.startsWith("http")) imgUrl else url.removeSuffix("html") + "jpg"
-        val imageBytes = URL(finalImageUrl).read()
-        finalImageUrl to imageBytes
+        body.getElementById("js-article-figure")
+            .getElementsByTag("img")
+            .firstOrNull()
+            ?.attr("src")
+            ?.let { if (it.startsWith("http")) it else url.removeSuffix("html") + "jpg" }
+            ?.let { it to URL(it).read() }
     }
 
     fun getAudio(): Pair<String, ByteArray> {
@@ -52,10 +53,12 @@ class ArticlePage(val headline: Headline) : Page<Article> {
     }
 
     fun getContent(body: Element): String {
-        val content = body.getElementById("newsarticle").getContent()
+        val content = body.getElementById("js-article-body").getText()
         if (content.contains("<") and content.contains(">"))
             throw NhkException(headline.id, "Content contains illegal characters: $content")
         else return content
     }
+
+    private fun Element.getText() = getElementsByTag("p").html().getText()
 
 }

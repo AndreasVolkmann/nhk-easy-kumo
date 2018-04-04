@@ -1,8 +1,9 @@
 package me.avo.kumo.nhk.persistence
 
-import me.avo.kumo.nhk.data.*
-import me.avo.kumo.util.*
-import java.io.*
+import me.avo.kumo.nhk.data.Article
+import me.avo.kumo.nhk.data.Headline
+import me.avo.kumo.util.writeIfNotExists
+import java.io.File
 
 class FileArchive(private val database: NhkDatabase) {
 
@@ -27,6 +28,6 @@ class FileArchive(private val database: NhkDatabase) {
 
 private fun Article.makeFiles() {
     println("$date - $id - $title")
-    imageFile.writeIfNotExists(image)
+    image?.let(imageFile::writeIfNotExists)
     audioFile.writeIfNotExists(audio)
 }

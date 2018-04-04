@@ -10,7 +10,7 @@ data class Article(
     val title: String,
     val date: String,
     val content: String,
-    val image: ByteArray,
+    val image: ByteArray?,
     val imageUrl: String? = null,
     val audio: ByteArray,
     val audioUrl: String,
