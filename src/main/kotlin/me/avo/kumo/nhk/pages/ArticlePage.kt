@@ -29,6 +29,7 @@ class ArticlePage(val headline: Headline) : Page<Article> {
         val content = getContent(body)
         val (imageUrl, image) = getImage(body) ?: null to null
         val (audioUrl, audio) = getAudio()
+        AudioParser(headline.id).run()
 
         return Article(
             id = headline.id, url = url, date = headline.date, content = content, title = headline.title,

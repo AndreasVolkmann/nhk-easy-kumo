@@ -13,6 +13,7 @@ internal class ArticlePageTest {
     private val dummyArticlePage = ArticlePage(headline = Headline("x", "x", "x", "x"))
 
     @Test fun `new layout`() {
+        //val articlePage = ArticlePage(Headline())
         val body = getBodyFromHtmlFile("new-layout-article.html")
         val content = dummyArticlePage.getContent(body)
         println(content)
