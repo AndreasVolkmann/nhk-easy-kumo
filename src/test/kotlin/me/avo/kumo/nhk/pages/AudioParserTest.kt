@@ -8,22 +8,14 @@ internal class AudioParserTest {
 
     @Test fun run() {
 
-        AudioParser("k10011409951000").let {
+        val destinationDir = File("C:\\Users\\avolk\\Downloads\\nhk\\wrk\\")
+        val ffmpegPath = "D:\\Programme\\ffmpeg-20180411-9825f77-win64-static"
+        AudioParser("k10011409951000", destinationDir, destinationDir, ffmpegPath).let { ap ->
 
-
-
-
-            fun runDemux() {
-                val dir = File("C:\\Users\\avolk\\Downloads\\nhk\\wrk\\")
-                val files = dir.listFiles().filter { it.extension == "ts" }
-
-                files.forEach { f ->
-                    println(f.name)
-                    it.demux(f, dir)
-                }
-            }
-
-            runDemux()
+            val files = destinationDir.listFiles().filter { it.extension == "ts" }
+            println("Found ${files.size} files")
+            ap.demuxSegments(files)
+                .let(ap::mergeAudio)
 
             //it.run()
         }
