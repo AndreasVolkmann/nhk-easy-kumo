@@ -5,6 +5,10 @@ import com.iheartradio.m3u8.Format
 import com.iheartradio.m3u8.PlaylistParser
 import com.iheartradio.m3u8.data.*
 import me.avo.kumo.util.getLogger
+import org.jcodec.api.transcode.SinkImpl
+import org.jcodec.api.transcode.SourceImpl
+import org.jcodec.api.transcode.Transcoder
+import org.jcodec.common.Codec
 import org.jcodec.common.JCodecUtil
 import org.jcodec.common.TrackType
 import sun.plugin.dom.exception.InvalidStateException
@@ -66,7 +70,7 @@ class AudioParser(val id: String) {
 
     fun getCipher(data: EncryptionData): Cipher {
         val bytes = URL(data.uri).readBytes()
-        val chainmode = "CTR"
+        val chainmode = "CBC"
         val method = when (data.method) {
             EncryptionMethod.AES -> "AES/$chainmode/NoPadding"
             else -> data.method.name
@@ -78,10 +82,28 @@ class AudioParser(val id: String) {
             .apply { init(Cipher.DECRYPT_MODE, keySpec, IvParameterSpec(ByteArray(16))) }
     }
 
-    fun demux(file: File) = JCodecUtil.createM2TSDemuxer(file, TrackType.AUDIO).let {
-        it.v1.audioTracks.onEach(::println)
-            .forEach {
-
+    fun demux(file: File, destination: File) = JCodecUtil.createM2TSDemuxer(file, TrackType.AUDIO).let { muxer ->
+        muxer.v1.audioTracks
+            .onEach(::println)
+            .forEachIndexed { index, track ->
+                Transcoder
+                    .newTranscoder()
+                    .addSource(
+                        SourceImpl(
+                            file.absolutePath,
+                            org.jcodec.common.Format.WAV,
+                            null,
+                            CodecFinder.getCodec(muxer.v0, index)
+                        )
+                    )
+                    .addSink(
+                        SinkImpl(
+                            File(destination, file.nameWithoutExtension + ".aac").absolutePath,
+                            org.jcodec.common.Format.MOV, null, Codec.AAC
+                        )
+                    )
+                    .create()
+                    .transcode()
             }
     }
 

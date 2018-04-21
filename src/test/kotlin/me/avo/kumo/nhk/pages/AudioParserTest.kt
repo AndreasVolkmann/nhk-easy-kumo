@@ -10,20 +10,22 @@ internal class AudioParserTest {
 
         AudioParser("k10011409951000").let {
 
-            //it.run()
+
+
 
             fun runDemux() {
                 val dir = File("C:\\Users\\avolk\\Downloads\\nhk\\wrk\\")
-                val files = dir.listFiles()
+                val files = dir.listFiles().filter { it.extension == "ts" }
 
                 files.forEach { f ->
                     println(f.name)
-                    it.demux(f)
+                    it.demux(f, dir)
                 }
             }
 
             runDemux()
 
+            //it.run()
         }
 
     }
