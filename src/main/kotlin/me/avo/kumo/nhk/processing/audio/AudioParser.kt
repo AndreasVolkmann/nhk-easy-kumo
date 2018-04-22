@@ -22,25 +22,26 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import javax.sound.sampled.AudioFileFormat
 
-class AudioParser(
-    val id: String,
-    private val workingDir: File,
-    private val destinationDir: File,
-    private val ffmpegPath: String
-) {
+class AudioParser(private val workingDir: File, private val destinationDir: File, private val ffmpegPath: String) {
 
-    private val audioUrl = "https://nhks-vh.akamaihd.net/i/news/easy/$id.mp4/master.m3u8"
-
-    fun run(): List<File> = getPlaylist(audioUrl)
+    /**
+     * Parses the audio for the given [id] and returns a single wav [File]
+     */
+    fun run(id: String): File = getAudioUrl(id)
+        .let(::getPlaylist)
         .masterPlaylist
         .let(::handleMasterList)
         .mediaPlaylist
         .let(::handleMediaList)
+        .onEach(File::deleteOnExit)
         .let(::demuxSegments)
-        .also(this::mergeAudio)
+        .onEach(File::deleteOnExit)
+        .let(::mergeAudio)
 
-    fun mergeAudio(files: Collection<File>) {
-        files.map(File::getAudioInputStream)
+    private fun getAudioUrl(id: String) = "https://nhks-vh.akamaihd.net/i/news/easy/$id.mp4/master.m3u8"
+
+    fun mergeAudio(files: Collection<File>): File {
+        return files.map(File::getAudioInputStream)
             .reduce { one, two -> joinAudioStreams(one, two) }
             .let { writeAudio(it, AudioFileFormat.Type.WAVE, File(destinationDir, "audio.wav")) }
     }
@@ -57,7 +58,7 @@ class AudioParser(
 
     private fun handleMediaList(playlist: MediaPlaylist): Collection<File> = playlist.tracks.let { tracks ->
         println("Found ${tracks.size} tracks")
-        val cipher = tracks.first().encryptionData.let(this::getCipher)
+        val cipher = tracks.first().encryptionData.let(::getCipher)
         return downloadTracks(tracks, cipher)
     }
 
@@ -114,25 +115,24 @@ class AudioParser(
             }
     }
 
-    fun demuxSegments(files: Collection<File>): List<File> = files.map(this::demuxFfmpeg)
+    fun demuxSegments(files: Collection<File>): List<File> = files.map(::demuxFfmpeg)
 
     fun demuxFfmpeg(source: File): File {
         val fullPath = "$ffmpegPath\\bin\\ffmpeg.exe"
-        val target = getDestinationFile(source, destinationDir)
-        val fullCommand =
-            "$fullPath -i ${source.absolutePath} -acodec copy -vcodec copy -map 0:p:keep_pid? -map 0:p:first_remove_pid? -map -0:p:second_remove_pid? ${target.absolutePath}"
+        val target = getDestinationFile(source, destinationDir, "wav")
+        val fullCommand = "$fullPath -i ${source.absolutePath} ${target.absolutePath}"
         println(fullCommand)
         Runtime.getRuntime().exec(fullCommand).let {
-            it.inputStream.bufferedReader().lines().forEach { println(it) }
-            it.errorStream.bufferedReader().lines().forEach { println(it) }
+            it.inputStream.bufferedReader().lines().forEach(::println)
+            it.errorStream.bufferedReader().lines().forEach(::println)
             val result = it.waitFor()
             if (result != 0) throw IllegalStateException("Process returned result $result, not 0")
         }
         return target
     }
 
-    fun getDestinationFile(source: File, destinationDir: File) =
-        File(destinationDir, source.nameWithoutExtension + ".aac")
+    private fun getDestinationFile(source: File, destinationDir: File, extension: String = "aac") =
+        File(destinationDir, source.nameWithoutExtension + ".$extension")
 
     private val logger = this::class.getLogger()
 

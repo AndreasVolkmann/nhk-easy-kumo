@@ -29,5 +29,5 @@ class FileArchive(private val database: NhkDatabase) {
 private fun Article.makeFiles() {
     println("$date - $id - $title")
     image?.let(imageFile::writeIfNotExists)
-    audioFile.writeIfNotExists(audio)
+    //audioFile.writeIfNotExists(audio)
 }

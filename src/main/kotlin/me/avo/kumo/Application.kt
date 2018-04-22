@@ -1,8 +1,8 @@
 package me.avo.kumo
 
-import me.avo.kumo.nhk.*
-import me.avo.kumo.util.*
-import org.apache.logging.log4j.*
+import me.avo.kumo.nhk.Crawler
+import me.avo.kumo.util.ErrorHandler
+import me.avo.kumo.util.driverName
 
 fun main(args: Array<String>) {
     Args.parse(args)
@@ -12,7 +12,12 @@ fun main(args: Array<String>) {
 
 fun start() = try {
     System.setProperty("webdriver.chrome.driver", driverName)
-    Crawler(Args.collection, Args.useApi, kodein).fetchAndImport()
+    Crawler(
+        Args.collection,
+        Args.ffmepgPath,
+        Args.useApi,
+        kodein
+    ).fetchAndImport()
 } catch (ex: Exception) {
     ErrorHandler.handle(ex)
 }

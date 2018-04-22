@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 internal class ArticlePageTest {
 
-    private val dummyArticlePage = ArticlePage(headline = Headline("x", "x", "x", "x"))
+    private val dummyArticlePage = ArticlePage(headline = Headline("x", "x", "x", "x"), ffmpegPath = "")
 
     @Test fun `new layout`() {
         //val articlePage = ArticlePage(Headline())

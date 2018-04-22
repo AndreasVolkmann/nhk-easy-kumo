@@ -3,6 +3,7 @@ package me.avo.kumo.nhk.pages
 import me.avo.kumo.nhk.NhkException
 import me.avo.kumo.nhk.data.Article
 import me.avo.kumo.nhk.data.Headline
+import me.avo.kumo.nhk.processing.audio.AudioParser
 import me.avo.kumo.util.getLogger
 import me.avo.kumo.util.getText
 import me.avo.kumo.util.read
@@ -10,7 +11,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.net.URL
 
-class ArticlePage(val headline: Headline) : Page<Article> {
+class ArticlePage(val headline: Headline, private val ffmpegPath: String) : Page<Article> {
 
     override val logger = this::class.getLogger()
 
@@ -28,24 +29,23 @@ class ArticlePage(val headline: Headline) : Page<Article> {
 
         val content = getContent(body)
         val (imageUrl, image) = getImage(body) ?: null to null
-        val (audioUrl, audio) = getAudio()
-        //AudioParserAlt(headline.id)
+        //val (audioUrl) = getAudio()
+
+        val audio = AudioParser(dir, dir, ffmpegPath).run(headline.id)
 
         return Article(
             id = headline.id, url = url, date = headline.date, content = content, title = headline.title,
-            image = image, imageUrl = imageUrl, audio = audio, audioUrl = audioUrl, dir = dir, tags = listOf()
+            image = image, imageUrl = imageUrl, audioFile = audio, audioUrl = null, dir = dir, tags = listOf()
         )
     }
 
     fun getImage(body: Element): Pair<String, ByteArray>? = if (Article.getImageFile(dir).exists()) null
-    else {
-        body.getElementById("js-article-figure")
-            .getElementsByTag("img")
-            .firstOrNull()
-            ?.attr("src")
-            ?.let { if (it.startsWith("http")) it else url.removeSuffix("html") + "jpg" }
-            ?.let { it to URL(it).read() }
-    }
+    else body.getElementById("js-article-figure")
+        .getElementsByTag("img")
+        .firstOrNull()
+        ?.attr("src")
+        ?.let { if (it.startsWith("http")) it else url.removeSuffix("html") + "jpg" }
+        ?.let { it to URL(it).read() }
 
     fun getAudio(): Pair<String, ByteArray> {
         val audioUrl = url.removeSuffix("html") + "mp3"

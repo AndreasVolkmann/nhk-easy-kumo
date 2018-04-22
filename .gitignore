@@ -27,4 +27,4 @@ config.properties
 *.wav
 
 /logo.png
-jave-1.0.2
+/lib

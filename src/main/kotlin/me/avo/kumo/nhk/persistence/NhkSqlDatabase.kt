@@ -14,7 +14,7 @@ class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
         val title = varchar("title", 254)
         val date = datetime("date")
         val content = text("content")
-        val audioUrl = varchar("audio_url", 254)
+        val audioUrl = varchar("audio_url", 254).nullable()
         val imported = bool("imported")
     }
 

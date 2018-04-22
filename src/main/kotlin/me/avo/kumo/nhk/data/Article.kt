@@ -12,16 +12,14 @@ data class Article(
     val content: String,
     val image: ByteArray?,
     val imageUrl: String? = null,
-    val audio: ByteArray,
-    val audioUrl: String,
+    val audioFile: File,
+    val audioUrl: String?,
     val dir: File,
     val tags: List<String>,
     val imported: Boolean = false
 ) {
 
     val imageFile = getImageFile(dir)
-
-    val audioFile = getAudioFile(dir)
 
     fun toLesson() = Lesson(
         title = title,

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 internal class CrawlerTest {
 
-    private val crawler = Crawler("", false, kodein)
+    private val crawler = Crawler("", TODO(), false, kodein)
     private val tagger: ArticleTagger = kodein.instance()
 
     @Disabled

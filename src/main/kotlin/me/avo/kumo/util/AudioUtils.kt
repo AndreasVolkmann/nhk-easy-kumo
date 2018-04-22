@@ -14,9 +14,11 @@ fun joinAudioStreams(one: AudioInputStream, two: AudioInputStream) = AudioInputS
     one.frameLength + two.frameLength
 )
 
-fun writeAudio(audioInputStream: AudioInputStream, format: AudioFileFormat.Type, destination: File): Int =
-    AudioSystem.write(
-        audioInputStream,
-        format,
-        destination
-    )
+fun writeAudio(audioInputStream: AudioInputStream, format: AudioFileFormat.Type, destination: File): File =
+    destination.also {
+        AudioSystem.write(
+            audioInputStream,
+            format,
+            destination
+        )
+    }

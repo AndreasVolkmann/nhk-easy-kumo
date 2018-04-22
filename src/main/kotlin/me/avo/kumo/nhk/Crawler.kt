@@ -7,9 +7,10 @@ import me.avo.kumo.nhk.data.*
 import me.avo.kumo.nhk.pages.*
 import me.avo.kumo.nhk.persistence.*
 import me.avo.kumo.nhk.processing.*
+import me.avo.kumo.nhk.processing.audio.AudioParser
 import me.avo.kumo.util.*
 
-class Crawler(collection: String, val useApi: Boolean, kodein: Kodein) {
+class Crawler(collection: String, val ffmepgPath: String, val useApi: Boolean, kodein: Kodein) {
 
     private val mainUrl = "http://www3.nhk.or.jp/news/easy/"
     private val database: NhkDatabase = kodein.instance()
@@ -36,7 +37,7 @@ class Crawler(collection: String, val useApi: Boolean, kodein: Kodein) {
 
     fun fetchArticles(): List<Article> = MainPage(mainUrl)
         .get()
-        .map(::ArticlePage)
+        .map { ArticlePage(it, ffmepgPath) }
         .map { future { it.get() } }
         .map { it.join() }
 
