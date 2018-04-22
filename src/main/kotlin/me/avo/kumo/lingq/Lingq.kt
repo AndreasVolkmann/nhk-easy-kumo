@@ -29,6 +29,7 @@ class Lingq(val collection: String, private val database: NhkDatabase) {
         val driver = ChromeDriver(options)
         try {
             articles.forEach {
+                logger.info("Importing article ${it.id} - ${it.title}")
                 driver.import(it)
                 database.updateArticle(it)
             }

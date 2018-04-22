@@ -23,7 +23,7 @@ class Crawler(collection: String, val ffmepgPath: String, val useApi: Boolean, k
         .also { logger.info("Found ${it.size} articles that have not been imported yet") }
         .map(tagger::tag)
         .also(archive::archive)
-        .let(this::import)
+        .let(::import)
 
     fun import(articles: List<Article>) = when {
         articles.isEmpty() -> Unit
@@ -38,8 +38,7 @@ class Crawler(collection: String, val ffmepgPath: String, val useApi: Boolean, k
     fun fetchArticles(): List<Article> = MainPage(mainUrl)
         .get()
         .map { ArticlePage(it, ffmepgPath) }
-        .map { future { it.get() } }
-        .map { it.join() }
+        .map(ArticlePage::get)
 
     private val logger = this::class.getLogger()
 

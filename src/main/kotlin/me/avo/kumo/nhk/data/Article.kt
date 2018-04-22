@@ -35,7 +35,6 @@ data class Article(
 
     companion object {
         fun getImageFile(dir: File) = File(dir.absolutePath + "/image.jpg")
-        fun getAudioFile(dir: File) = File(dir.absolutePath + "/audio.mp3")
     }
 
 }

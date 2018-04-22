@@ -17,34 +17,37 @@ import org.jcodec.common.TrackType
 import sun.plugin.dom.exception.InvalidStateException
 import java.io.File
 import java.net.URL
+import java.util.concurrent.TimeUnit
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import javax.sound.sampled.AudioFileFormat
 
-class AudioParser(private val workingDir: File, private val destinationDir: File, private val ffmpegPath: String) {
+class AudioParser(private val workingDir: File, private val destinationDir: File, ffmpegPath: String) {
 
     /**
      * Parses the audio for the given [id] and returns a single wav [File]
      */
-    fun run(id: String): File = getAudioUrl(id)
+    fun run(id: String): File = logger.info("Parsing audio for article $id")
+        .let { getAudioUrl(id) }
         .let(::getPlaylist)
         .masterPlaylist
         .let(::handleMasterList)
         .mediaPlaylist
         .let(::handleMediaList)
-        .onEach(File::deleteOnExit)
+        //.onEach(File::deleteOnExit)
         .let(::demuxSegments)
         .onEach(File::deleteOnExit)
         .let(::mergeAudio)
+        .let(::convertWavToMp3)
 
     private fun getAudioUrl(id: String) = "https://nhks-vh.akamaihd.net/i/news/easy/$id.mp4/master.m3u8"
 
-    fun mergeAudio(files: Collection<File>): File {
-        return files.map(File::getAudioInputStream)
-            .reduce { one, two -> joinAudioStreams(one, two) }
-            .let { writeAudio(it, AudioFileFormat.Type.WAVE, File(destinationDir, "audio.wav")) }
-    }
+    fun mergeAudio(files: Collection<File>): File = files
+        .map(File::getAudioInputStream)
+        .reduce { one, two -> joinAudioStreams(one, two) }
+        .let { writeAudio(it, AudioFileFormat.Type.WAVE, File(destinationDir, "audio.wav")) }
+        .also(File::deleteOnExit)
 
     private fun getPlaylist(audioUrl: String): Playlist = URL(audioUrl)
         .openStream()
@@ -57,7 +60,7 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
         ?.let(this::getPlaylist) ?: throw InvalidStateException("Master playlist does not contain any playlists")
 
     private fun handleMediaList(playlist: MediaPlaylist): Collection<File> = playlist.tracks.let { tracks ->
-        println("Found ${tracks.size} tracks")
+        logger.trace("Found ${tracks.size} tracks")
         val cipher = tracks.first().encryptionData.let(::getCipher)
         return downloadTracks(tracks, cipher)
     }
@@ -71,7 +74,6 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
 
     fun getSegment(track: TrackData): Pair<String, ByteArray> {
         val filename = track.uri.substringAfter(".mp4/").substringBefore("?null=0&id=")
-        println(filename)
         val bytes = URL(track.uri).openStream().use { it.readBytes() }
         return filename to bytes
     }
@@ -84,11 +86,45 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
             else -> data.method.name
         }
         val keySpec = SecretKeySpec(bytes, data.method.name)
-        logger.trace("Decrypting using method ${data.method} / $method")
+        logger.trace("Decrypting using method ${data.method} ($method)")
         return Cipher
             .getInstance(method)
             .apply { init(Cipher.DECRYPT_MODE, keySpec, IvParameterSpec(ByteArray(16))) }
     }
+
+    fun demuxSegments(files: Collection<File>): List<File> = files.map(::demuxFfmpeg)
+
+    fun demuxFfmpeg(source: File): File {
+        val target = getDestinationFile(source, destinationDir, "wav")
+        val fullCommand = "$ffmpeg -i ${source.absolutePath} ${target.absolutePath}"
+        logger.debug(fullCommand)
+        executeCommand(fullCommand).let {
+            //it.errorStream.bufferedReader().lines().forEach(::println)
+            val result = it.waitFor(10, TimeUnit.SECONDS)
+            if (!result) throw IllegalStateException("Process returned result $result, not 0")
+        }
+        return target
+    }
+
+    fun convertWavToMp3(file: File): File {
+        val target = getDestinationFile(file, destinationDir, "mp3")
+        executeCommand("$ffmpeg -i ${file.absolutePath} -acodec libmp3lame ${target.absolutePath}")
+            .waitFor(10, TimeUnit.SECONDS)
+        return target
+    }
+
+    private val ffmpeg = "$ffmpegPath/bin/ffmpeg.exe"
+
+    private fun executeCommand(cmd: String) = Runtime.getRuntime().exec(cmd)
+
+    private fun getDestinationFile(source: File, destinationDir: File, extension: String) =
+        File(destinationDir, source.nameWithoutExtension + ".$extension").also {
+            if (it.exists()) {
+                // TODO check if exists already
+            }
+        }
+
+    private val logger = this::class.getLogger()
 
     fun demux(file: File, destination: File) = JCodecUtil.createM2TSDemuxer(file, TrackType.AUDIO).let { muxer ->
         muxer.v1.audioTracks
@@ -114,26 +150,5 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
                     .transcode()
             }
     }
-
-    fun demuxSegments(files: Collection<File>): List<File> = files.map(::demuxFfmpeg)
-
-    fun demuxFfmpeg(source: File): File {
-        val fullPath = "$ffmpegPath\\bin\\ffmpeg.exe"
-        val target = getDestinationFile(source, destinationDir, "wav")
-        val fullCommand = "$fullPath -i ${source.absolutePath} ${target.absolutePath}"
-        println(fullCommand)
-        Runtime.getRuntime().exec(fullCommand).let {
-            it.inputStream.bufferedReader().lines().forEach(::println)
-            it.errorStream.bufferedReader().lines().forEach(::println)
-            val result = it.waitFor()
-            if (result != 0) throw IllegalStateException("Process returned result $result, not 0")
-        }
-        return target
-    }
-
-    private fun getDestinationFile(source: File, destinationDir: File, extension: String = "aac") =
-        File(destinationDir, source.nameWithoutExtension + ".$extension")
-
-    private val logger = this::class.getLogger()
 
 }

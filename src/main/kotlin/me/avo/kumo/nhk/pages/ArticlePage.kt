@@ -9,6 +9,7 @@ import me.avo.kumo.util.getText
 import me.avo.kumo.util.read
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.io.File
 import java.net.URL
 
 class ArticlePage(val headline: Headline, private val ffmpegPath: String) : Page<Article> {
@@ -29,28 +30,30 @@ class ArticlePage(val headline: Headline, private val ffmpegPath: String) : Page
 
         val content = getContent(body)
         val (imageUrl, image) = getImage(body) ?: null to null
-        //val (audioUrl) = getAudio()
-
-        val audio = AudioParser(dir, dir, ffmpegPath).run(headline.id)
-
+        val audio = getAudio()
         return Article(
             id = headline.id, url = url, date = headline.date, content = content, title = headline.title,
             image = image, imageUrl = imageUrl, audioFile = audio, audioUrl = null, dir = dir, tags = listOf()
         )
     }
 
-    fun getImage(body: Element): Pair<String, ByteArray>? = if (Article.getImageFile(dir).exists()) null
-    else body.getElementById("js-article-figure")
-        .getElementsByTag("img")
-        .firstOrNull()
-        ?.attr("src")
-        ?.let { if (it.startsWith("http")) it else url.removeSuffix("html") + "jpg" }
-        ?.let { it to URL(it).read() }
+    fun getImage(body: Element): Pair<String, ByteArray>? = when {
+        Article.getImageFile(dir).exists() -> null
+        else -> body
+            .getElementById("js-article-figure")
+            .getElementsByTag("img")
+            .firstOrNull()
+            ?.attr("src")
+            ?.let { if (it.startsWith("http")) it else url.removeSuffix("html") + "jpg" }
+            ?.let { it to URL(it).read() }
+    }
 
-    fun getAudio(): Pair<String, ByteArray> {
-        val audioUrl = url.removeSuffix("html") + "mp3"
-        return if (Article.getAudioFile(dir).exists()) audioUrl to ByteArray(0)
-        else audioUrl to URL(audioUrl).read()
+    fun getAudio(): File {
+        val audioFile = File(dir, "audio.mp3")
+        return when (audioFile.exists()) {
+            true -> audioFile
+            false -> AudioParser(dir, dir, ffmpegPath).run(headline.id)
+        }
     }
 
     fun getContent(body: Element): String {

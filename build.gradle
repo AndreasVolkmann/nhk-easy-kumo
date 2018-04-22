@@ -54,9 +54,10 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.2'
 
     /* Audio Tools */
-    compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
     compile 'com.iheartradio.m3u8:open-m3u8:0.2.4'
     compile 'org.jcodec:jcodec:0.2.3'
+    compile 'com.googlecode.soundlibs:jlayer:1.0.1.4'
+    compile 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
 
     /* Database */
     compile 'org.jetbrains.exposed:exposed:0.9.1'

@@ -16,8 +16,11 @@
     </Appenders>
     <Loggers>
         <Logger name="org.mongodb" level="warn" />
+        <Logger name="Exposed" level="warn" />
+        <Logger name="org.reflections.Reflections" level="warn" />
+        <Logger name="org.nd4j" level="warn" />
 
-        <Root level="warn">
+        <Root level="trace">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="Error" level="warn" />
         </Root>
