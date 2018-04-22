@@ -27,3 +27,4 @@ config.properties
 *.wav
 
 /logo.png
+/lib

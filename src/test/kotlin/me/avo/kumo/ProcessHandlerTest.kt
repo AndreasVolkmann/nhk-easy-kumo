@@ -1,4 +1,4 @@
-package me.avo.storage
+package me.avo.kumo
 
 import me.avo.kumo.util.ProcessHandler
 import me.avo.kumo.util.isWindows

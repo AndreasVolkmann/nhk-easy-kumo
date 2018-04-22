@@ -1,17 +1,15 @@
 package me.avo.kumo.util
 
-import javazoom.jl.decoder.*
-import org.jsoup.nodes.*
-import java.io.*
-import java.net.*
-import java.text.*
+import javazoom.jl.decoder.Bitstream
+import java.io.BufferedInputStream
+import java.io.File
+import java.net.URL
+import java.text.SimpleDateFormat
 import java.util.*
 
 val sdf = SimpleDateFormat("yyyy-MM-dd")
 
 val currentDate: String get() = sdf.format(Date())
-
-fun Element.getContent() = getElementsByTag("p").html().getText()
 
 fun String.getText() = this
     .replace(Regex("(?s)(<rt>.*?)(?:(?:\r*\n){2}|</rt>)"), "")
@@ -19,12 +17,8 @@ fun String.getText() = this
     .replace(Regex("( )+"), "")
     .trimEnd('\n')
 
-fun Element.getTitle() = html().getText()
-
 const val gatsu = "月"
 const val nichi = "日"
-
-fun Element.getDate() = makeDate(this.getElementsByClass("newsDate").first().text())
 
 fun makeDate(text: String): String {
     val stripped = text.removeSurrounding("[", "]").substringBefore(nichi)
@@ -38,15 +32,13 @@ fun makeDate(text: String): String {
 
 fun String.addZero() = if (length == 1) "0$this" else this
 
-fun getIdFromUrl(url: String) = url.substringAfterLast("/").substringBefore(".html")
-
 fun File.notExists() = !this.exists()
 
 fun File.writeIfNotExists(bytes: ByteArray) {
     if (this.notExists() && bytes.isNotEmpty()) this.writeBytes(bytes)
 }
 
-fun File.writeIfNotExists(text: String) = writeIfNotExists(text.toByteArray())
+//fun File.writeIfNotExists(text: String) = writeIfNotExists(text.toByteArray())
 
 fun URL.read() = try {
     BufferedInputStream(this.openStream()).use { it.readBytes() }

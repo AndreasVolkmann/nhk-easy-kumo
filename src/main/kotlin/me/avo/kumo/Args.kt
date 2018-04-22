@@ -12,6 +12,9 @@ object Args {
             required = true, echoInput = true)
     lateinit var collection: String
 
+    @Parameter(names = ["-ffmpeg", "--ffmpeg-path"], description = "File path to ffmpeg install dir", required = true)
+    lateinit var ffmepgPath: String
+
     @Parameter(names = ["--help", "-h"], help = true)
     var help = false
         private set

@@ -6,6 +6,7 @@ import me.avo.kumo.nhk.data.*
 import org.amshove.kluent.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.DynamicTest.dynamicTest
+import java.io.File
 
 internal class ArticleTaggerTest {
 
@@ -35,7 +36,7 @@ internal class ArticleTaggerTest {
         .map { it[0] to it[1] }
         .mapIndexed { i, (tag, content) ->
             Article(
-                "$i", "", "", "", content, ByteArray(0), null, ByteArray(0), "", mock(), listOf(), false
+                "$i", "", "", "", content, ByteArray(0), null, File(""), "", mock(), listOf(), false
             ) to tag
         }
         .toMap()

@@ -1,9 +1,15 @@
 package me.avo.kumo
 
-import com.github.salomonbrys.kodein.*
-import me.avo.kumo.nhk.persistence.*
-import me.avo.kumo.nhk.processing.*
-import java.io.*
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.instance
+import com.github.salomonbrys.kodein.singleton
+import me.avo.kumo.nhk.persistence.FileArchive
+import me.avo.kumo.nhk.persistence.NhkDatabase
+import me.avo.kumo.nhk.persistence.NhkSqlDatabase
+import me.avo.kumo.nhk.processing.ArticleTagger
+import me.avo.kumo.nhk.processing.ArticleTokenizer
+import java.io.File
 
 val kodein = Kodein {
     val url = "jdbc:sqlite:D:\\Dev\\data\\sqlite\\nhk-easy"

@@ -2,7 +2,7 @@ group 'me.avo'
 version '1.2'
 
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.31'
     ext.log4j_version = '2.10.0'
     ext.deeplearning_version = '0.9.1'
 
@@ -43,28 +43,39 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
+    /* Logging */
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4j_version
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j_version
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: log4j_version
+    compile group: "org.slf4j", name: "slf4j-simple", version: "1.7.25"
 
+    /* Browser automation */
     compile "org.seleniumhq.selenium:selenium-chrome-driver:3.11.0"
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.2'
 
-    compile group: 'javazoom', name: 'jlayer', version: '1.0.1'
-    compile group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.5"
-    compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
-    compile 'com.beust:jcommander:1.72'
-    compile 'org.mongodb:mongodb-driver:3.5.0'
-    compile 'net.jodah:failsafe:1.0.5'
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.22.5'
-    compile group: "org.slf4j", name: "slf4j-simple", version: "1.7.25"
-    compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
+    /* Audio Tools */
+    compile 'com.iheartradio.m3u8:open-m3u8:0.2.4'
+    compile 'org.jcodec:jcodec:0.2.3'
+    compile 'com.googlecode.soundlibs:jlayer:1.0.1.4'
+    compile 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+
+    /* Database */
     compile 'org.jetbrains.exposed:exposed:0.9.1'
     compile 'org.xerial:sqlite-jdbc:3.21.0.1'
+    compile 'org.mongodb:mongodb-driver:3.5.0'
 
+    /* NLP */
     compile 'com.atilika.kuromoji:kuromoji-ipadic:0.9.0'
     compile "org.deeplearning4j:deeplearning4j-nlp:$deeplearning_version"
     compile "org.nd4j:nd4j-native-platform:$deeplearning_version"
+
+    /* Utility */
+    compile group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.5"
+    compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
+    compile 'com.beust:jcommander:1.72'
+    compile 'net.jodah:failsafe:1.0.5'
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.22.5'
+    compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
 
     testCompile "org.junit.jupiter:junit-jupiter-api:5.1.0"
     testCompile "org.amshove.kluent:kluent:1.35"

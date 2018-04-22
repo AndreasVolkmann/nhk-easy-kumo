@@ -12,3 +12,4 @@ fun <R, T> Map<R, T>.print(i: Int = size) = also { entries.take(i).onEach { prin
 fun <T: Any> KClass<T>.loadResource(name: String) = java.classLoader.getResource(name).readText()
 
 fun Element.getFirstByTag(tag: String) = getElementsByTag(tag).first()!!
+fun Element.getFirstByClass(clazz: String) = getElementsByClass(clazz).first()!!

@@ -7,9 +7,10 @@ import me.avo.kumo.nhk.data.*
 import me.avo.kumo.nhk.pages.*
 import me.avo.kumo.nhk.persistence.*
 import me.avo.kumo.nhk.processing.*
+import me.avo.kumo.nhk.processing.audio.AudioParser
 import me.avo.kumo.util.*
 
-class Crawler(collection: String, val useApi: Boolean, kodein: Kodein) {
+class Crawler(collection: String, val ffmepgPath: String, val useApi: Boolean, kodein: Kodein) {
 
     private val mainUrl = "http://www3.nhk.or.jp/news/easy/"
     private val database: NhkDatabase = kodein.instance()
@@ -22,7 +23,7 @@ class Crawler(collection: String, val useApi: Boolean, kodein: Kodein) {
         .also { logger.info("Found ${it.size} articles that have not been imported yet") }
         .map(tagger::tag)
         .also(archive::archive)
-        .let(this::import)
+        .let(::import)
 
     fun import(articles: List<Article>) = when {
         articles.isEmpty() -> Unit
@@ -36,9 +37,8 @@ class Crawler(collection: String, val useApi: Boolean, kodein: Kodein) {
 
     fun fetchArticles(): List<Article> = MainPage(mainUrl)
         .get()
-        .map(::ArticlePage)
-        .map { future { it.get() } }
-        .map { it.join() }
+        .map { ArticlePage(it, ffmepgPath) }
+        .map(ArticlePage::get)
 
     private val logger = this::class.getLogger()
 
