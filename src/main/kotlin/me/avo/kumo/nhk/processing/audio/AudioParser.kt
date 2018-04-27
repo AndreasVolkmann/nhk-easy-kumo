@@ -23,6 +23,7 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import javax.sound.sampled.AudioFileFormat
+import javax.sound.sampled.AudioInputStream
 
 class AudioParser(private val workingDir: File, private val destinationDir: File, ffmpegPath: String) {
 
@@ -39,16 +40,27 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
         //.onEach(File::deleteOnExit)
         .let(::demuxSegments)
         .onEach(File::deleteOnExit)
-        .let(::mergeAudio)
+        .let(::mergeAlt)
         .let(::convertWavToMp3)
 
     private fun getAudioUrl(id: String) = "https://nhks-vh.akamaihd.net/i/news/easy/$id.mp4/master.m3u8"
 
-    fun mergeAudio(files: Collection<File>): File = files
-        .map(File::getAudioInputStream)
-        .reduce { one, two -> joinAudioStreams(one, two) }
-        .let { writeAudio(it, AudioFileFormat.Type.WAVE, File(destinationDir, "audio.wav")) }
-        .also(File::deleteOnExit)
+    fun mergeAlt(files: Collection<File>): File {
+        val streams = files.map(File::getAudioInputStream)
+        val joinedStream = joinAudioStreams(streams)
+        try {
+            return writeCombinedAudio(joinedStream)
+        } finally {
+            streams.forEach(AudioInputStream::close)
+            joinedStream.close()
+        }
+    }
+
+    fun writeCombinedAudio(stream: AudioInputStream) = writeAudio(
+        stream,
+        AudioFileFormat.Type.WAVE,
+        File(destinationDir, "audio.wav")
+    ).also(File::deleteOnExit)
 
     private fun getPlaylist(audioUrl: String): Playlist = URL(audioUrl)
         .openStream()
