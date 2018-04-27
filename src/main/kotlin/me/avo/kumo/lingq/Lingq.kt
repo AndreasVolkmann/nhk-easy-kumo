@@ -1,6 +1,7 @@
 package me.avo.kumo.lingq
 
 import me.avo.kumo.nhk.data.Article
+import me.avo.kumo.nhk.data.ArticleException
 import me.avo.kumo.nhk.persistence.NhkDatabase
 import me.avo.kumo.util.Property
 import me.avo.kumo.util.getDuration
@@ -28,14 +29,18 @@ class Lingq(val collection: String, private val database: NhkDatabase) {
     fun import(articles: List<Article>) {
         val driver = ChromeDriver(options)
         try {
-            articles.forEach {
-                logger.info("Importing article ${it.id} - ${it.title}")
-                driver.import(it)
-                database.updateArticle(it)
-            }
+            articles.forEach { importArticle(driver, it) }
         } finally {
             driver.quit()
         }
+    }
+
+    private fun importArticle(driver: ChromeDriver, article: Article) = try {
+        logger.info("Importing article ${article.id} - ${article.title}")
+        driver.import(article)
+        database.updateArticle(article)
+    } catch (ex: Exception) {
+        throw ArticleException(article, ex)
     }
 
     private fun ChromeDriver.import(article: Article) = try {

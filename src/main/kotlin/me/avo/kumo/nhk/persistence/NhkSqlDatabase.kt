@@ -1,10 +1,10 @@
 package me.avo.kumo.nhk.persistence
 
 import me.avo.kumo.nhk.data.Article
+import me.avo.kumo.nhk.data.ArticleException
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.joda.time.DateTime
 import java.sql.Connection
 
 class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
@@ -28,12 +28,17 @@ class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
         }
     }
 
+    object Ignore : Table("ignore") {
+        val articledId = varchar("article_id", 20) references Articles.id
+    }
+
     init {
+        initialize(url, driver)
+    }
+
+    private fun initialize(url: String, driver: String) {
         Database.connect(url, driver)
         TransactionManager.manager.defaultIsolationLevel = Connection.TRANSACTION_SERIALIZABLE
-        transaction {
-            SchemaUtils.createMissingTablesAndColumns(Articles)
-        }
     }
 
     override fun saveArticles(articles: List<Article>) = transaction {
@@ -52,15 +57,14 @@ class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
             it[id] = article.id
             it[url] = article.url
             it[title] = article.title
-            it[date] = DateTime.parse(article.date)
+            it[date] = article.date
             it[content] = article.content
             it[audioUrl] = article.audioUrl
             it[imported] = article.imported
         }
         article.tags.forEach { t -> insertTag(article.id, t) }
     } catch (ex: Exception) {
-        exposedLogger.error("Article encountered an error: $article")
-        throw ex
+        throw ArticleException(article, ex)
     }
 
     private fun insertTag(articleId: String, tag: String) = Tags.insert {
@@ -74,14 +78,23 @@ class NhkSqlDatabase(url: String, driver: String) : NhkDatabase {
         }
     }
 
-    override fun filterImported(articles: List<Article>): List<Article> {
+    override fun filterImportedOrIgnored(articles: List<Article>): List<Article> {
         val ids = articles.map(Article::id)
         val alreadyImported = transaction {
-            Articles.slice(Articles.id)
-                .select { Articles.id inList ids and (Articles.imported eq true) }
+            (Articles leftJoin Ignore)
+                .slice(Articles.id)
+                .select {
+                    Articles.id inList ids and (Articles.imported eq true or Ignore.articledId.isNotNull())
+                }
                 .map { it[Articles.id] }
         }
         return articles.filter { it.id !in alreadyImported }
+    }
+
+    override fun ignoreArticle(articleId: String): Unit = transaction {
+        Ignore.insert {
+            it[this.articledId] = articleId
+        }
     }
 
 }

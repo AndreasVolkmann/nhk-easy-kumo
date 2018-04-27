@@ -2,8 +2,10 @@ package me.avo.kumo.nhk.pages
 
 import me.avo.kumo.nhk.NhkException
 import me.avo.kumo.nhk.data.Article
+import me.avo.kumo.nhk.data.ArticleException
 import me.avo.kumo.nhk.data.Headline
 import me.avo.kumo.nhk.processing.audio.AudioParser
+import me.avo.kumo.util.dateToString
 import me.avo.kumo.util.getLogger
 import me.avo.kumo.util.getText
 import me.avo.kumo.util.read
@@ -18,11 +20,12 @@ class ArticlePage(val headline: Headline, private val ffmpegPath: String) : Page
 
     override val url = headline.url
 
-    override val path = "${super.path}/${headline.date}/${headline.id}" // ../articles/2017-02-18/k19439393
+    override val path =
+        "${super.path}/${headline.date.dateToString()}/${headline.id}" // ../articles/2017-02-18/k19439393
 
     override val name = "Article_${headline.id}.html"
 
-    override fun get(): Article {
+    override fun get(): Article = try {
         if (!dir.exists()) dir.mkdirs()
 
         val text = load()
@@ -31,10 +34,12 @@ class ArticlePage(val headline: Headline, private val ffmpegPath: String) : Page
         val content = getContent(body)
         val (imageUrl, image) = getImage(body) ?: null to null
         val audio = getAudio()
-        return Article(
+        Article(
             id = headline.id, url = url, date = headline.date, content = content, title = headline.title,
             image = image, imageUrl = imageUrl, audioFile = audio, audioUrl = null, dir = dir, tags = listOf()
         )
+    } catch (ex: Exception) {
+        throw ArticleException(headline, ex)
     }
 
     fun getImage(body: Element): Pair<String, ByteArray>? = when {

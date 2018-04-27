@@ -16,6 +16,7 @@ import org.jcodec.common.JCodecUtil
 import org.jcodec.common.TrackType
 import sun.plugin.dom.exception.InvalidStateException
 import java.io.File
+import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.crypto.Cipher
@@ -66,7 +67,7 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
     }
 
     private fun downloadTracks(tracks: List<TrackData>, cipher: Cipher): Collection<File> = tracks
-        .associate(this::getSegment)
+        .associate(::getSegment)
         .mapValues { (_, bytes) -> cipher.doFinal(bytes) }
         .mapKeys { (name, _) -> File(workingDir, name) }
         .onEach { (file, bytes) -> file.writeBytes(bytes) }
@@ -74,9 +75,16 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
 
     fun getSegment(track: TrackData): Pair<String, ByteArray> {
         val filename = track.uri.substringAfter(".mp4/").substringBefore("?null=0&id=")
-        val bytes = URL(track.uri).openStream().use { it.readBytes() }
+        val bytes = try {
+            URL(track.uri).openStream().use { it.readBytes() }
+        } catch (ex: IOException) {
+            throw SegmentNotFoundException(track.uri, ex)
+        }
         return filename to bytes
     }
+
+    private class SegmentNotFoundException(uri: String, override val cause: Throwable?) :
+        IOException("Could not find segment with uri: $uri")
 
     fun getCipher(data: EncryptionData): Cipher {
         val bytes = URL(data.uri).readBytes()

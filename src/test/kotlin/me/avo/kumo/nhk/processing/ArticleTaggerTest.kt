@@ -1,11 +1,14 @@
 package me.avo.kumo.nhk.processing
 
-import com.github.salomonbrys.kodein.*
-import me.avo.kumo.*
-import me.avo.kumo.nhk.data.*
-import org.amshove.kluent.*
-import org.junit.jupiter.api.*
+import com.github.salomonbrys.kodein.instance
+import me.avo.kumo.kodein
+import me.avo.kumo.nhk.data.Article
+import org.amshove.kluent.mock
+import org.amshove.kluent.shouldContain
+import org.joda.time.DateTime
 import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 import java.io.File
 
 internal class ArticleTaggerTest {
@@ -36,7 +39,7 @@ internal class ArticleTaggerTest {
         .map { it[0] to it[1] }
         .mapIndexed { i, (tag, content) ->
             Article(
-                "$i", "", "", "", content, ByteArray(0), null, File(""), "", mock(), listOf(), false
+                "$i", "", "", DateTime(), content, null, null, File(""), "", mock(), listOf(), false
             ) to tag
         }
         .toMap()

@@ -1,15 +1,16 @@
 package me.avo.kumo.util
 
 import javazoom.jl.decoder.Bitstream
+import org.joda.time.DateTime
 import java.io.BufferedInputStream
 import java.io.File
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
-val sdf = SimpleDateFormat("yyyy-MM-dd")
+val currentDate: String get() = DateTime().dateToString()
 
-val currentDate: String get() = sdf.format(Date())
+fun DateTime.dateToString() = toString("yyyy-MM-dd")
 
 fun String.getText() = this
     .replace(Regex("(?s)(<rt>.*?)(?:(?:\r*\n){2}|</rt>)"), "")
@@ -17,22 +18,22 @@ fun String.getText() = this
     .replace(Regex("( )+"), "")
     .trimEnd('\n')
 
-const val gatsu = "月"
-const val nichi = "日"
+private const val gatsu = "月"
+private const val nichi = "日"
 
-fun makeDate(text: String): String {
+fun makeDate(text: String): DateTime {
     val stripped = text.removeSurrounding("[", "]").substringBefore(nichi)
 
-    val year = currentDate.substring(0, 4)
+    val year = DateTime.now().year
     val month = stripped.substringBefore(gatsu).addZero()
     val day = stripped.substringAfter(gatsu).addZero()
 
-    return "$year-$month-$day"
+    return DateTime.parse("$year-$month-$day")
 }
 
-fun String.addZero() = if (length == 1) "0$this" else this
+private fun String.addZero() = if (length == 1) "0$this" else this
 
-fun File.notExists() = !this.exists()
+private fun File.notExists() = !this.exists()
 
 fun File.writeIfNotExists(bytes: ByteArray) {
     if (this.notExists() && bytes.isNotEmpty()) this.writeBytes(bytes)
