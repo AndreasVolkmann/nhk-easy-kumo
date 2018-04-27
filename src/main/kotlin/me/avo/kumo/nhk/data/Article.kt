@@ -2,13 +2,14 @@ package me.avo.kumo.nhk.data
 
 import me.avo.kumo.lingq.*
 import me.avo.kumo.util.*
+import org.joda.time.DateTime
 import java.io.*
 
 data class Article(
     val id: String,
     val url: String,
     val title: String,
-    val date: String,
+    val date: DateTime,
     val content: String,
     val image: ByteArray?,
     val imageUrl: String? = null,

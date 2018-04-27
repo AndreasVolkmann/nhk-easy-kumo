@@ -62,8 +62,7 @@ object Word2VecFix {
 
                         syn0!!.putRow(i, if (normalize) Transforms.unitVec(Nd4j.create(vector)) else Nd4j.create(vector))
 
-                        // FIXME There was an empty string in my test model ......
-                        if (StringUtils.isNotEmpty(word)) {
+                        if (!word.isEmpty()) {
                             val vw = VocabWord(1.0, word)
                             vw.index = cache.numWords()
 

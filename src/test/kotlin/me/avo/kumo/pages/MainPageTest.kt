@@ -25,7 +25,7 @@ internal class MainPageTest {
             it.url.shouldNotBeBlank()
             it.id.shouldNotBeBlank()
             it.title.shouldNotBeBlank()
-            it.date.shouldNotBeBlank()
+            //it.date.
         }
 
 }

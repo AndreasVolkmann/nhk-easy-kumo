@@ -5,12 +5,13 @@ import me.avo.kumo.nhk.data.Headline
 import me.avo.kumo.nhk.pages.ArticlePage
 import me.avo.kumo.util.*
 import org.amshove.kluent.*
+import org.joda.time.DateTime
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.Test
 
 internal class ArticlePageTest {
 
-    private val dummyArticlePage = ArticlePage(headline = Headline("x", "x", "x", "x"), ffmpegPath = "")
+    private val dummyArticlePage = ArticlePage(headline = Headline("x", "x", DateTime(), "x"), ffmpegPath = "")
 
     @Test fun `new layout`() {
         //val articlePage = ArticlePage(Headline())

@@ -1,14 +1,16 @@
 package me.avo.kumo.nhk
 
-import com.github.salomonbrys.kodein.*
-import kotlinx.coroutines.experimental.future.*
-import me.avo.kumo.lingq.*
-import me.avo.kumo.nhk.data.*
-import me.avo.kumo.nhk.pages.*
-import me.avo.kumo.nhk.persistence.*
-import me.avo.kumo.nhk.processing.*
-import me.avo.kumo.nhk.processing.audio.AudioParser
-import me.avo.kumo.util.*
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.instance
+import me.avo.kumo.lingq.Lingq
+import me.avo.kumo.lingq.LingqApi
+import me.avo.kumo.nhk.data.Article
+import me.avo.kumo.nhk.pages.ArticlePage
+import me.avo.kumo.nhk.pages.MainPage
+import me.avo.kumo.nhk.persistence.FileArchive
+import me.avo.kumo.nhk.persistence.NhkDatabase
+import me.avo.kumo.nhk.processing.ArticleTagger
+import me.avo.kumo.util.getLogger
 
 class Crawler(collection: String, val ffmepgPath: String, val useApi: Boolean, kodein: Kodein) {
 
@@ -19,7 +21,7 @@ class Crawler(collection: String, val ffmepgPath: String, val useApi: Boolean, k
     private val archive: FileArchive = kodein.instance()
 
     fun fetchAndImport() = fetchArticles()
-        .let(database::filterImported)
+        .let(database::filterImportedOrIgnored)
         .also { logger.info("Found ${it.size} articles that have not been imported yet") }
         .map(tagger::tag)
         .also(archive::archive)
