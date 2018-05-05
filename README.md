@@ -22,7 +22,7 @@ More to come ...
 
 ### Details ###
 
-TODO
+* [Audio processing](https://andreasvolkmann.github.io/m3u8-and-ts-segments/)
 
 
 <a href="http://www.lingq.com/learn/ja/web/#/course/266730" title="Learn Japanese online."><img src="http://www.lingq.com/goodies/ja/avolkmann/badge.jpg" alt="I Am Learning Japanese online with LingQ." border="0"/></a>
