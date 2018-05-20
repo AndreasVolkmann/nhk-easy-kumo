@@ -2,18 +2,23 @@ group 'me.avo'
 version '1.2'
 
 buildscript {
-    ext.kotlin_version = '1.2.40'
-    ext.log4j_version = '2.10.0'
-    ext.deeplearning_version = '0.9.1'
+    ext {
+        kotlin_version = '1.2.41'
+        log4j_version = '2.10.0'
+        deeplearning_version = '0.9.1'
+    }
 
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
     }
 }
 
+apply plugin: "com.github.ben-manes.versions"
 apply plugin: 'kotlin'
 
 task fatJar(type: Jar) {
@@ -51,7 +56,7 @@ dependencies {
 
     /* Browser automation */
     implementation "org.seleniumhq.selenium:selenium-chrome-driver:3.11.0"
-    implementation group: 'org.jsoup', name: 'jsoup', version: '1.11.2'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
 
     /* Audio Tools */
     implementation 'com.iheartradio.m3u8:open-m3u8:0.2.4'
@@ -60,7 +65,7 @@ dependencies {
     implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
 
     /* Database */
-    implementation 'org.jetbrains.exposed:exposed:0.9.1'
+    implementation 'org.jetbrains.exposed:exposed:0.10.2'
     implementation 'org.xerial:sqlite-jdbc:3.21.0.1'
     implementation 'org.mongodb:mongodb-driver:3.5.0'
 
@@ -73,12 +78,12 @@ dependencies {
     implementation group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.5"
     implementation 'com.github.salomonbrys.kotson:kotson:2.5.0'
     implementation 'com.beust:jcommander:1.72'
-    implementation 'net.jodah:failsafe:1.0.5'
+    implementation 'net.jodah:failsafe:1.1.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.22.5'
     implementation 'com.github.salomonbrys.kodein:kodein:4.1.0'
 //    implementation 'org.kodein.di:kodein-di-generic-jvm:5.0.0'
 
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.1.0"
-    testImplementation "org.amshove.kluent:kluent:1.35"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
+    testImplementation "org.amshove.kluent:kluent:1.38"
 
 }
