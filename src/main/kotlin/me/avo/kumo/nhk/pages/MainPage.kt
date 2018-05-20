@@ -13,7 +13,7 @@ class MainPage(override val url: String) : Page<List<Headline>> {
     override fun get(): List<Headline> = load()
         .let(Jsoup::parse)
         .body()
-        .let(this::getNewsList)
+        .let(::getNewsList)
 
     fun getNewsList(body: Element): List<Headline> = body
         .getElementsByClass("news-list-item")

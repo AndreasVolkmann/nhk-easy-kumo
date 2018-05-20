@@ -34,6 +34,6 @@ fun joinAudioStreams(streams: Collection<AudioInputStream>): AudioInputStream {
         format,
         streams
             .map { it.frameLength }
-            .reduce { total, length -> total + length }
+            .reduce(Long::plus)
     )
 }
