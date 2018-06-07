@@ -15,9 +15,10 @@ class MainPage(override val url: String) : Page<List<Headline>> {
         .body()
         .let(::getNewsList)
 
-    fun getNewsList(body: Element): List<Headline> = body
-        .getElementsByClass("news-list-item")
-        .map { it.extractHeadline() }
+    fun getNewsList(body: Element): List<Headline> =
+        (body.getElementsByClass("news-list-grid__item") + body.getElementById("js-news-pickup"))
+            .filter(Element::hasText)
+            .map { it.extractHeadline() }
 
     private fun Element.extractHeadline(): Headline = try {
         val heading = getFirstByTag("h1")

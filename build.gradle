@@ -6,6 +6,7 @@ buildscript {
         kotlin_version = '1.2.41'
         log4j_version = '2.10.0'
         deeplearning_version = '0.9.1'
+        junit_version = '5.2.0'
     }
 
     repositories {
@@ -83,7 +84,17 @@ dependencies {
     compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
 //    compile 'org.kodein.di:kodein-di-generic-jvm:5.0.0'
 
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.2.0"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junit_version"
     testCompile "org.amshove.kluent:kluent:1.38"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junit_version"
 
+}
+
+test {
+    useJUnitPlatform {
+        excludeTags 'head'
+        includeEngines 'junit-jupiter'
+    }
+
+    failFast = false
 }
