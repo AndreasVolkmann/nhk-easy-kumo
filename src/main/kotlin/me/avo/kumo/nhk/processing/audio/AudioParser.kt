@@ -14,7 +14,6 @@ import org.jcodec.api.transcode.Transcoder
 import org.jcodec.common.Codec
 import org.jcodec.common.JCodecUtil
 import org.jcodec.common.TrackType
-import sun.plugin.dom.exception.InvalidStateException
 import java.io.File
 import java.io.IOException
 import java.net.URL
@@ -70,7 +69,7 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
         .playlists
         .firstOrNull()
         ?.uri
-        ?.let(this::getPlaylist) ?: throw InvalidStateException("Master playlist does not contain any playlists")
+        ?.let(this::getPlaylist) ?: throw IllegalStateException("Master playlist does not contain any playlists")
 
     private fun handleMediaList(playlist: MediaPlaylist): Collection<File> = playlist.tracks.let { tracks ->
         logger.trace("Found ${tracks.size} tracks")
