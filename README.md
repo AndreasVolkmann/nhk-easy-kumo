@@ -1,6 +1,9 @@
 # NHK Easy 蜘蛛
 <img src="https://lh3.googleusercontent.com/2CQfccUAMi-Zcy_6A2Lh6blLs7diKs0pMc6ymAva2k7-CBhHEmstlVDAQeT7syHTVSA=w300" alt="NHK Easy News" />
 
+[![Build Status](https://travis-ci.com/AndreasVolkmann/nhk-easy-kumo.svg?branch=master)](https://travis-ci.com/AndreasVolkmann/spotify-reddit)
+
+
 ### General ###
 A web crawler to fetch today's top news articles from [the NHK easy page](http://www3.nhk.or.jp/news/easy/).
 
