@@ -36,7 +36,8 @@ internal class MainPageTest {
         println(headlines.first())
     }
 
-    @Tag("head") @Test fun `load page headless`() {
+    @Tag("local")
+    @Test fun `load page headless`() {
         val mainPage = MainPage("http://www3.nhk.or.jp/news/easy/")
         val file = mainPage.file
         if (file.exists()) {

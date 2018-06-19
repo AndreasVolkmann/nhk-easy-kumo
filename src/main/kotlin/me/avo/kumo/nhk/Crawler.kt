@@ -1,7 +1,5 @@
 package me.avo.kumo.nhk
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.instance
 import me.avo.kumo.lingq.Lingq
 import me.avo.kumo.lingq.LingqApi
 import me.avo.kumo.nhk.data.Article
@@ -11,14 +9,16 @@ import me.avo.kumo.nhk.persistence.FileArchive
 import me.avo.kumo.nhk.persistence.NhkDatabase
 import me.avo.kumo.nhk.processing.ArticleTagger
 import me.avo.kumo.util.getLogger
+import org.kodein.di.Kodein
+import org.kodein.di.generic.instance
 
 class Crawler(collection: String, val ffmepgPath: String, val useApi: Boolean, kodein: Kodein) {
 
     private val mainUrl = "http://www3.nhk.or.jp/news/easy/"
-    private val database: NhkDatabase = kodein.instance()
+    private val database: NhkDatabase by kodein.instance()
+    private val tagger: ArticleTagger by kodein.instance()
+    private val archive: FileArchive by kodein.instance()
     private val lingq = Lingq(collection, database)
-    private val tagger: ArticleTagger = kodein.instance()
-    private val archive: FileArchive = kodein.instance()
 
     fun fetchAndImport() = fetchArticles()
         .let(database::filterImportedOrIgnored)

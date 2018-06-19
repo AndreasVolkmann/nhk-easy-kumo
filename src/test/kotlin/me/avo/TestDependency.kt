@@ -1,10 +1,9 @@
 package me.avo
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.singleton
 import me.avo.kumo.productionModule
+import org.kodein.di.Kodein
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.singleton
 
 val testKodein = Kodein {
     import(productionModule, allowOverride = true)

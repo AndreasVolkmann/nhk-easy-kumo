@@ -3,9 +3,11 @@ package me.avo.kumo.nhk.pages
 import me.avo.getResourceAsFile
 import me.avo.kumo.nhk.processing.audio.AudioParser
 import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.io.File
 
+@Tag("local")
 internal class AudioParserTest {
 
     private val destinationDir = File("C:\\Users\\avolk\\Downloads\\nhk\\wrk\\")
@@ -15,7 +17,6 @@ internal class AudioParserTest {
 
     @Disabled
     @Test fun run() {
-
         //val id = "k10011409951000"
         parser.let { ap ->
 
@@ -26,7 +27,6 @@ internal class AudioParserTest {
 
             //it.run()
         }
-
     }
 
     @Test fun merge() {
@@ -35,7 +35,6 @@ internal class AudioParserTest {
         val streams = listOf(streamOne, streamTwo)
 
         parser.mergeAlt(streams)
-
     }
 
 }

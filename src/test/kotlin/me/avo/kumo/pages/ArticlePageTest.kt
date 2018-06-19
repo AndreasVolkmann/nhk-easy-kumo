@@ -7,6 +7,7 @@ import me.avo.kumo.util.*
 import org.amshove.kluent.*
 import org.joda.time.DateTime
 import org.jsoup.Jsoup
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class ArticlePageTest {

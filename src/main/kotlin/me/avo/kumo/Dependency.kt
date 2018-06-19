@@ -1,18 +1,19 @@
 package me.avo.kumo
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.singleton
 import me.avo.kumo.nhk.persistence.FileArchive
 import me.avo.kumo.nhk.persistence.NhkDatabase
 import me.avo.kumo.nhk.persistence.NhkSqlDatabase
 import me.avo.kumo.nhk.processing.ArticleTagger
 import me.avo.kumo.nhk.processing.ArticleTokenizer
 import me.avo.kumo.util.ErrorHandler
+import org.kodein.di.Kodein
+import org.kodein.di.Kodein.Module
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.singleton
 import java.io.File
 
-val productionModule = Kodein.Module {
+val productionModule = Module("production") {
     val url = "jdbc:sqlite:D:\\Dev\\data\\sqlite\\nhk-easy"
     val driver = "org.sqlite.JDBC"
     val includeVerbs = false

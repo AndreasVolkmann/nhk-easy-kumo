@@ -48,12 +48,12 @@ fun URL.read() = try {
 }
 
 fun File.getDuration(): Long = inputStream().use {
-    val stream = Bitstream(it)
-    val h = stream.readFrame()
+    //val stream = Bitstream(it)
+    //val h = stream.readFrame()
     val tn = it.channel.size()
-    val ms = h.ms_per_frame()
-    val bitrate = h.bitrate()
-    val frame = h.calculate_framesize()
+    //val ms = h.ms_per_frame()
+    //val bitrate = h.bitrate()
+    //val frame = h.calculate_framesize()
     //println("Frame: $frame, ms: $ms, bitrate: $bitrate, channel: $tn, ${tn / 10000}" )
     tn / 10000
 }
