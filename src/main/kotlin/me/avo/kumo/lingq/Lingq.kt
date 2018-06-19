@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit
 class Lingq(val collection: String, private val database: NhkDatabase) {
 
     private val url = "https://www.lingq.com/learn/ja/import/contents/?add"
-    private val user = Property["lingq.user"]
-    private val pass = Property["lingq.pass"]
+    private val user = System.getenv("LINGQ_USER") ?: Property["lingq.user"]
+    private val pass = System.getenv("LINGQ_PASS") ?: Property["lingq.pass"]
     private val options = ChromeOptions()
         .addArguments("headless")
         .addArguments("window-size=1600x1200")

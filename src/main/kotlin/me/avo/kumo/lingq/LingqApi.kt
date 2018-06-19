@@ -11,19 +11,18 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicHeader
-import org.apache.http.protocol.HTTP
 import org.apache.http.util.EntityUtils
 import java.io.BufferedReader
 import java.nio.charset.Charset
 
 object LingqApi {
 
-    val url = "https://www.lingq.com/api/v2/ja/lessons/"
-    val key = Property["lingq.key"]
+    const val url = "https://www.lingq.com/api/v2/ja/lessons/"
+    private val key = System.getenv("LINGQ_KEY") ?: Property["lingq.key"]
 
-    fun getClient(): CloseableHttpClient = HttpClientBuilder.create()
-            .setDefaultHeaders(mutableListOf(BasicHeader("Authorization", "Token $key")))
-            .build()
+    private fun getClient(): CloseableHttpClient = HttpClientBuilder.create()
+        .setDefaultHeaders(mutableListOf(BasicHeader("Authorization", "Token $key")))
+        .build()
 
     fun postLesson(lesson: Lesson): Unit = getClient().use { client ->
         val content = lesson.toJson()
@@ -40,11 +39,11 @@ object LingqApi {
         formatResponse(res)
     }
 
-    fun Lesson.toJson() = jsonObject(
-            "title" to title,
-            "text" to text,
-            "share_status" to share_status,
-            "collection" to collection
+    private fun Lesson.toJson() = jsonObject(
+        "title" to title,
+        "text" to text,
+        "share_status" to share_status,
+        "collection" to collection
     ).apply {
         level?.let { addProperty("level", level) }
         external_audio?.let { addProperty("external_audio", external_audio) }
@@ -62,14 +61,15 @@ object LingqApi {
         resToTitle(formatResponse(res))
     }
 
-    fun handleResponse(url: String, response: CloseableHttpResponse) = if (response.statusLine.statusCode > 201) {
-        println(response.entity.content.bufferedReader().use(BufferedReader::readText))
-        println(url)
-        throw RuntimeException("Failed : HTTP error code : " + response.statusLine.statusCode)
-    } else Unit
+    private fun handleResponse(url: String, response: CloseableHttpResponse) =
+        if (response.statusLine.statusCode > 201) {
+            println(response.entity.content.bufferedReader().use(BufferedReader::readText))
+            println(url)
+            throw RuntimeException("Failed : HTTP error code : " + response.statusLine.statusCode)
+        } else Unit
 
-    fun formatResponse(response: CloseableHttpResponse): String = EntityUtils
-            .toString(response.entity, Charset.forName("UTF-8"))
+    private fun formatResponse(response: CloseableHttpResponse): String = EntityUtils
+        .toString(response.entity, Charset.forName("UTF-8"))
 
     private val logger = this::class.getLogger()
 
