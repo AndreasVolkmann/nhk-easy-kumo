@@ -19,6 +19,8 @@ class Lingq(val collection: String, private val database: NhkDatabase) {
     private val user = Property["lingq.user"]
     private val pass = Property["lingq.pass"]
     private val options = ChromeOptions()
+        .addArguments("headless")
+        .addArguments("window-size=1600x1200")
     private val logger = this::class.getLogger()
 
     private val retryPolicy: RetryPolicy = RetryPolicy()
@@ -44,7 +46,7 @@ class Lingq(val collection: String, private val database: NhkDatabase) {
     }
 
     private fun ChromeDriver.import(article: Article) = try {
-        manage().window().maximize()
+        //manage().window().maximize()
         get(url)
         login()
         sleep(2500)

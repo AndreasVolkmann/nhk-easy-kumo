@@ -149,7 +149,7 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
     fun demux(file: File, destination: File) = JCodecUtil.createM2TSDemuxer(file, TrackType.AUDIO).let { muxer ->
         muxer.v1.audioTracks
             .onEach(::println)
-            .forEachIndexed { index, track ->
+            .forEachIndexed { index, _ ->
                 Transcoder
                     .newTranscoder()
                     .addSource(

@@ -8,7 +8,6 @@ import java.io.File
 import java.net.URL
 import javax.sound.sampled.AudioFileFormat
 import javax.sound.sampled.AudioInputStream
-import javax.sound.sampled.AudioSystem
 
 object AudioConverter {
 
@@ -30,8 +29,6 @@ object AudioConverter {
     fun join(name1: String, name2: String) {
         val clip1 = File(name1).getAudioInputStream()
         val clip2 = File(name2).getAudioInputStream()
-
-        val clips = listOf(clip1, clip2)
 
         val appendedFiles = joinAudioStreams(clip1, clip2)
 

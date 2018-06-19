@@ -1,9 +1,9 @@
 package me.avo.kumo
 
-import com.github.salomonbrys.kodein.instance
 import me.avo.kumo.nhk.Crawler
 import me.avo.kumo.util.ErrorHandler
 import me.avo.kumo.util.driverName
+import org.kodein.di.generic.instance
 
 fun main(args: Array<String>) {
     Args.parse(args)
@@ -24,6 +24,6 @@ fun start() = try {
     crawler.fetchAndImport()
 
 } catch (ex: Exception) {
-    val handler = kodein.instance<ErrorHandler>()
+    val handler by kodein.instance<ErrorHandler>()
     handler.handle(ex)
 }

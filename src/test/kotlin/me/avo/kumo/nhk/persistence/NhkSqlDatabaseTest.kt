@@ -1,6 +1,5 @@
 package me.avo.kumo.nhk.persistence
 
-import com.github.salomonbrys.kodein.instance
 import me.avo.kumo.nhk.data.Article
 import me.avo.kumo.nhk.persistence.NhkSqlDatabase.*
 import me.avo.testKodein
@@ -12,14 +11,20 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.direct
+import org.kodein.di.generic.instance
 import java.io.File
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class NhkSqlDatabaseTest {
+internal class NhkSqlDatabaseTest : KodeinAware {
+
+    override val kodein: Kodein = testKodein
 
     private val db = NhkSqlDatabase(
-        testKodein.instance("url"),
-        testKodein.instance("driver")
+        direct.instance("url"),
+        direct.instance("driver")
     )
 
     @BeforeAll fun beforeAll() = transaction {
@@ -54,7 +59,18 @@ internal class NhkSqlDatabaseTest {
     }
 
     private fun makeArticle(imported: Boolean = false) = Article(
-        idCounter++.toString(), "", "test", DateTime(), "", null, null, File(""), null, File(""), listOf("test-tag"), imported
+        idCounter++.toString(),
+        "",
+        "test",
+        DateTime(),
+        "",
+        null,
+        null,
+        File(""),
+        null,
+        File(""),
+        listOf("test-tag"),
+        imported
     )
 
     private var idCounter = 0

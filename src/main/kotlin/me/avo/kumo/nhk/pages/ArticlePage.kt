@@ -53,7 +53,7 @@ class ArticlePage(val headline: Headline, private val ffmpegPath: String) : Page
             ?.let { it to URL(it).read() }
     }
 
-    fun getAudio(): File {
+    private fun getAudio(): File {
         val audioFile = File(dir, "audio.mp3")
         return when (audioFile.exists()) {
             true -> audioFile
@@ -62,12 +62,16 @@ class ArticlePage(val headline: Headline, private val ffmpegPath: String) : Page
     }
 
     fun getContent(body: Element): String {
-        val content = body.getElementById("js-article-body").getText()
+        val content = body.getElementsByAttribute("id").mapNotNull {
+            it.getElementWithId("newsarticle") ?: it.getElementWithId("js-article-body")
+        }.first().getText()
+
         if (content.contains("<") and content.contains(">"))
             throw NhkException(headline.id, "Content contains illegal characters: $content")
         else return content
     }
 
     private fun Element.getText() = getElementsByTag("p").html().getText()
+    private fun Element.getElementWithId(id: String) = getElementsByAttributeValue("id", id).firstOrNull()
 
 }

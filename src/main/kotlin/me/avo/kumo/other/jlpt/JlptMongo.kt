@@ -15,6 +15,7 @@ object JlptMongo : Mongo {
         replaceOne(eq("title", lesson.title), lesson.toDocument(), UpdateOptions().upsert(true))
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun loadLessons() = this {
         find().map {
             Lesson(
