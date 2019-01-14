@@ -1,31 +1,18 @@
 package me.avo.kumo
 
-import com.beust.jcommander.*
+import com.apurebase.arkenv.Arkenv
 
-object Args {
+object Args : Arkenv() {
 
-    @Parameter(names = ["--api", "-a"], description = "Whether the LingQ API should be used")
-    var useApi = false
-        private set
+    val useApi: Boolean by argument("--api", "-a") {
+        description = "Whether the LingQ API should be used"
+    }
 
-    @Parameter(names = ["--collection", "-c"], description = "The ID of the target collection / course",
-            required = true, echoInput = true)
-    lateinit var collection: String
+    val collection: String by argument("--collection", "-c") {
+        description = "The ID of the target collection / course"
+    }
 
-    @Parameter(names = ["-ffmpeg", "--ffmpeg-path"], description = "File path to ffmpeg install dir", required = true)
-    lateinit var ffmepgPath: String
-
-    @Parameter(names = ["--help", "-h"], help = true)
-    var help = false
-        private set
-
-    fun parse(args: Array<String>) = JCommander
-            .newBuilder()
-            .addObject(this)
-            .build()
-            .let {
-                it.parse(*args)
-                if (help) it.usage()
-            }
-
+    val ffmepgPath: String by argument("-ffmpeg", "--ffmpeg-path") {
+        description = "File path to ffmpeg install dir"
+    }
 }

@@ -8,12 +8,6 @@ import me.avo.kumo.util.getAudioInputStream
 import me.avo.kumo.util.getLogger
 import me.avo.kumo.util.joinAudioStreams
 import me.avo.kumo.util.writeAudio
-import org.jcodec.api.transcode.SinkImpl
-import org.jcodec.api.transcode.SourceImpl
-import org.jcodec.api.transcode.Transcoder
-import org.jcodec.common.Codec
-import org.jcodec.common.JCodecUtil
-import org.jcodec.common.TrackType
 import java.io.File
 import java.io.IOException
 import java.net.URL
@@ -55,7 +49,7 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
         }
     }
 
-    fun writeCombinedAudio(stream: AudioInputStream) = writeAudio(
+    private fun writeCombinedAudio(stream: AudioInputStream) = writeAudio(
         stream,
         AudioFileFormat.Type.WAVE,
         File(destinationDir, "audio.wav")
@@ -84,7 +78,7 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
         .onEach { (file, bytes) -> file.writeBytes(bytes) }
         .keys
 
-    fun getSegment(track: TrackData): Pair<String, ByteArray> {
+    private fun getSegment(track: TrackData): Pair<String, ByteArray> {
         val filename = track.uri.substringAfter(".mp4/").substringBefore("?null=0&id=")
         val bytes = try {
             URL(track.uri).openStream().use { it.readBytes() }
@@ -97,7 +91,7 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
     private class SegmentNotFoundException(uri: String, override val cause: Throwable?) :
         IOException("Could not find segment with uri: $uri")
 
-    fun getCipher(data: EncryptionData): Cipher {
+    private fun getCipher(data: EncryptionData): Cipher {
         val bytes = URL(data.uri).readBytes()
         val chainmode = "CBC"
         val method = when (data.method) {
@@ -125,7 +119,7 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
         return target
     }
 
-    fun convertWavToMp3(file: File): File {
+    private fun convertWavToMp3(file: File): File {
         val target = getDestinationFile(file, destinationDir, "mp3")
         executeCommand("$ffmpeg -i ${file.absolutePath} -acodec libmp3lame ${target.absolutePath}")
             .waitFor(10, TimeUnit.SECONDS)
@@ -144,30 +138,5 @@ class AudioParser(private val workingDir: File, private val destinationDir: File
         }
 
     private val logger = this::class.getLogger()
-
-    fun demux(file: File, destination: File) = JCodecUtil.createM2TSDemuxer(file, TrackType.AUDIO).let { muxer ->
-        muxer.v1.audioTracks
-            .onEach(::println)
-            .forEachIndexed { index, _ ->
-                Transcoder
-                    .newTranscoder()
-                    .addSource(
-                        SourceImpl(
-                            file.absolutePath,
-                            org.jcodec.common.Format.WAV,
-                            null,
-                            CodecFinder.getCodec(muxer.v0, index)
-                        )
-                    )
-                    .addSink(
-                        SinkImpl(
-                            File(destination, file.nameWithoutExtension + ".aac").absolutePath,
-                            org.jcodec.common.Format.MOV, null, Codec.AAC
-                        )
-                    )
-                    .create()
-                    .transcode()
-            }
-    }
 
 }

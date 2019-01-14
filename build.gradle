@@ -3,7 +3,7 @@ version '1.2'
 
 buildscript {
     ext {
-        kotlin_version = '1.2.50'
+        kotlin_version = '1.2.71'
         log4j_version = '2.10.0'
         deeplearning_version = '0.9.1'
         junit_version = '5.2.0'
@@ -15,7 +15,7 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.github.ben-manes:gradle-versions-plugin:0.19.0"
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.20.0"
     }
 }
 
@@ -41,8 +41,8 @@ kotlin {
 }
 
 repositories {
-    mavenCentral()
     jcenter()
+    mavenCentral()
     maven { url "http://dl.bintray.com/kotlin/exposed" }
 }
 
@@ -76,15 +76,15 @@ dependencies {
     compile "org.nd4j:nd4j-native-platform:$deeplearning_version"
 
     /* Utility */
-    compile group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.5"
+    compile group: "org.apache.httpcomponents", name: "httpclient", version: "4.5.6"
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
-    compile 'com.beust:jcommander:1.72'
-    compile 'net.jodah:failsafe:1.1.0'
+    compile 'com.apurebase:arkenv:1.2.0'
+    compile 'net.jodah:failsafe:1.1.1'
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.23.3'
     compile 'org.kodein.di:kodein-di-generic-jvm:5.1.0'
 
     testCompile "org.junit.jupiter:junit-jupiter-api:$junit_version"
-    testCompile "org.amshove.kluent:kluent:1.38"
+    testCompile "org.amshove.kluent:kluent:1.46"
     testRuntime "org.junit.jupiter:junit-jupiter-engine:$junit_version"
 }
 
