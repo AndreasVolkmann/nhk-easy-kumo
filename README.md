@@ -17,15 +17,10 @@ Here are the courses containing them:
 The program relies on the [Selenium Chrome Driver](https://sites.google.com/a/chromium.org/chromedriver/downloads) which needs to be in the root project directory.
 Therefore, it cannot be run by a headless server. Remember to always use the latest version of the driver.
 
-NHK-kumo is also responsible for other courses:
-* [JLPT N2 Grammar Course](https://www.lingq.com/learn/ja/web/#/course/274307)
-
 
 More to come ...
 
 ### Details ###
 
-* [Audio processing](https://andreasvolkmann.github.io/m3u8-and-ts-segments/)
+* [Audio processing](https://andreasvolkmann.github.io/blog/2018-04-27-m3u8-and-ts-segments/)
 
-
-<a href="http://www.lingq.com/learn/ja/web/#/course/266730" title="Learn Japanese online."><img src="http://www.lingq.com/goodies/ja/avolkmann/badge.jpg" alt="I Am Learning Japanese online with LingQ." border="0"/></a>
